@@ -1,0 +1,20 @@
+S3method("image2D", "default")
+S3method("image2D", "matrix")
+S3method("image2D", "array")
+S3method("image2D", "list")
+S3method("plot", "plist")
+
+importFrom(misc3d, computeContour3d)
+
+export(jet.col, jet2.col, gg.col, gg2.col, ramp.col, alpha.col)
+export(colkey, mesh, trans3D)
+export(scatter2D, points2D, lines2D, text2D)
+export(image2D, contour2D, ImageOcean)
+export(persp3D, hist3D, ribbon3D, perspbox)
+export(scatter3D, image3D, contour3D, points3D, lines3D)
+export(surf3D, spheresurf3D, slice3D, slicecont3D, triangle3D) 
+export(arrows3D, polygon3D, segments3D, rect3D, box3D, border3D)
+export(text3D, voxel3D, isosurf3D, createvoxel, createisosurf)
+export(arrows2D, segments2D, rect2D, polygon2D)
+
+export(getplist, setplist, plotdev, selectplist)
