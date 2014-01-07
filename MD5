@@ -1,4 +1,4 @@
-80f2b2936bd1dcba9e25a4b2ef90e99c *DESCRIPTION
+016448e6888056e9de75beba5654db69 *DESCRIPTION
 15896fc3f60615b7f6752ed5f9ca7cfe *NAMESPACE
 49b24a2a66d4fb71b0b94f6d4b5ee165 *R/Contour.R
 c569f5df75f35feabcdd97fb973da7aa *R/Image.R
@@ -27,7 +27,7 @@ f27f9df78c149c44ae43c62b43347260 *R/plot2D.R
 714611056d69ddb252f832aaf4a47a63 *R/scatter.R
 c44f573113e9f64135bf643bc16f63e3 *R/scatter3D.R
 1cff74bf8bb208b8e7b1b8c7c54be213 *R/segments3D.R
-be851e67d5aedb250c3cecf0d31ecc8b *R/shade.R
+20d24fdf31c66880086a475e4d92f673 *R/shade.R
 a41c18f4ac39c41bd41d7c83f6f2c047 *R/slice3D.R
 c90e4b93164f668c4ab843ef952733c5 *R/slicecont3D.R
 b363bb07f263adb711b6c3370fb739c2 *R/sphere.R
@@ -39,10 +39,10 @@ b363bb07f263adb711b6c3370fb739c2 *R/sphere.R
 a29f36ea5b3594496fb873153e3a65e8 *data/Oxsat.rda
 0d68d3e982e656b454d3fa3f6153d847 *data/datalist
 513636a70cc621f6a49f1b868634e3ee *inst/doc/plot3D.R
-8cf3433928d4ae1ffe0feae8b739ece6 *inst/doc/plot3D.pdf
+0820a6ff9fdbe3643735678862e10b27 *inst/doc/plot3D.pdf
 0ea202168dae23a38d796d830cabe2bb *inst/doc/plot3D.rnw
 6a9e40f6bef1ade4c97ba4a6f1f68d82 *inst/doc/volcano.R
-6c21d9e8ca91534e24a9ddc88f0ff3e5 *inst/doc/volcano.pdf
+b8f94b3576af828d2c4778d019cb559d *inst/doc/volcano.pdf
 b3d76a65e1fd989b9fb3f038725b51a4 *inst/doc/volcano.rnw
 ad428a323876d03da5b747f96062cbb0 *man/Image.Rd
 a72fe34a4255ce174ecc3ced3b80854e *man/ImageOcean.Rd

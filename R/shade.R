@@ -213,6 +213,8 @@ facetcols.light <- function(light, Normals, col, shade) {
   Lrgbcol <- pmin((p$ambient + Id + p$sr * Is) * rgbcol + (1 - p$sr) * Is, 1)
 
   Lrgbcol[is.na(Lrgbcol)] <- 0
+  if (is.null(p$alpha))
+    p$alpha <- 1  # necessary for R < 3.0
   rgb(Lrgbcol[,1], Lrgbcol[,2], Lrgbcol[,3], p$alpha)
 
 }
