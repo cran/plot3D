@@ -61,7 +61,7 @@ The Netherlands
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Begin of the document
 \begin{document}
-\SweaveOpts{engine=R,eps=FALSE}
+\SweaveOpts{engine=R,eps=FALSE,resolution = 100}
 \SweaveOpts{keep.source=TRUE}
 
 <<preliminaries,echo=FALSE,results=hide>>=

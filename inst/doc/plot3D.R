@@ -10,7 +10,7 @@ options(width=75)
 
 
 ###################################################
-### code chunk number 2: plot3D.rnw:174-175
+### code chunk number 2: plot3D.rnw:178-179
 ###################################################
 args(persp3D)
 
@@ -34,7 +34,7 @@ rect(-50, 10, -20, 40, lwd = 3)
 
 
 ###################################################
-### code chunk number 5: plot3D.rnw:203-206
+### code chunk number 5: plot3D.rnw:207-210
 ###################################################
 ii <- which(Hypsometry$x > -50 & Hypsometry$x < -20)
 jj <- which(Hypsometry$y >  10 & Hypsometry$y <  40)
@@ -68,7 +68,7 @@ persp3D(z = Hypsometry$z[ii,jj], xlab = "longitude", bty = "bl2",
 
 
 ###################################################
-### code chunk number 8: plot3D.rnw:240-241
+### code chunk number 8: plot3D.rnw:244-245
 ###################################################
 args(slice3D)
 
@@ -106,7 +106,7 @@ isosurf3D(x, y, z, colvar = p, level = 0, col = "red")
 
 
 ###################################################
-### code chunk number 11: plot3D.rnw:276-277
+### code chunk number 11: plot3D.rnw:280-281
 ###################################################
 args(surf3D)
 
@@ -212,7 +212,7 @@ args(surf3D)
 
 
 ###################################################
-### code chunk number 14: plot3D.rnw:342-344
+### code chunk number 14: plot3D.rnw:346-348
 ###################################################
 args(scatter2D)
 args(scatter3D)
@@ -301,7 +301,7 @@ arrows3D(x0 = runif(10), y0 = runif(10), z0 = runif(10),
 
 
 ###################################################
-### code chunk number 19: plot3D.rnw:428-430
+### code chunk number 19: plot3D.rnw:432-434
 ###################################################
 names(Oxsat)
 dim(Oxsat$val)

@@ -17,8 +17,13 @@
 \author{
   Karline Soetaert
 }
+\note{
+This package is dedicated to Carlo
+}
 \references{
-dedicated to Carlo
+  \url{http://www.rforscience.com/rpackages/visualisation/oceanview/}
+
+  \url{http://www.rforscience.com/rpackages/visualisation/plot3d/}
 }
 \seealso{
 Functions that are based on the \link{persp} function:

@@ -338,6 +338,7 @@ update.3D <- function(plist, pt = NULL, CIpt = NULL, poly = NULL,
     plist$labels$cex    <- c(plist$labels$cex,    labels$cex)
     plist$labels$col    <- c(plist$labels$col,    labels$col)
     plist$labels$font   <- c(plist$labels$font,   labels$font)
+    plist$labels$srt    <- c(plist$labels$srt,    labels$srt)
     plist$labels$proj   <- c(plist$labels$proj,   labels$proj)
     plist$labels$alpha  <- c(plist$labels$alpha,  labels$alpha)
   }
@@ -498,7 +499,8 @@ plotlist3D <- function(plist) {
              col = labels$col[sortlist], 
              adj = labels$adj[sortlist], 
              cex = labels$cex[sortlist],
-             font = labels$font[sortlist] )
+             font = labels$font[sortlist],
+             srt = labels$srt[sortlist[1]])
 
       } else if (!is.null(arr)) {  # only simple arrows
          ArrType (arr.from$x[sortlist], arr.from$y[sortlist], 
@@ -582,7 +584,8 @@ plotlist3D <- function(plist) {
             col = labels$col[io],
             adj = labels$adj[io], 
             cex = labels$cex[io],
-            font = labels$font[io])
+            font = labels$font[io],
+            srt  = labels$srt[io[1]])
 
     } else if (type[ii] == 5) {
        io <- i - LCPSL

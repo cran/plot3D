@@ -12,9 +12,9 @@ ImageOcean <- function(...) {
     dots$clab  <- "depth, m"
   if (is.null(dots$NAcol)) 
     dots$NAcol  <- "black"
-  zz       <- Hypsometry$z
-  zz[zz>0] <- NA
-  
-  do.call("image2D", c(alist(zz, x = Hypsometry$x, y = Hypsometry$y), dots))
+  HH <- get("Hypsometry") # import package data set from /data  
+  zz       <- HH$z
+  zz[zz>0] <- NA   
+  do.call("image2D", c(alist(zz, x = HH$x, y = HH$y), dots))
 }
 

@@ -95,6 +95,7 @@ text3D <- function(x, y, z, labels, ..., colvar = NULL,
                 adj = setargs (dot$points$adj, 0),
                 cex = setargs (dot$points$cex, 1),
                 font = setargs(dot$points$font, 1),
+                srt = setargs(dot$points$srt, 0),
                 alpha = alpha,
                 proj = Proj)                 
 
