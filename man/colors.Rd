@@ -57,7 +57,7 @@ alpha.col (col = "grey", alpha = 0.5)
 \author{Karline Soetaert <karline.soetaert@nioz.nl>}
 \references{
 The gg-plot type of colors \code{gg.plot} is a color-blind friendly palette from 
-\url{http://wiki.stdout.org/rcookbook/Graphs}.
+\code{http://wiki.stdout.org/rcookbook/Graphs}.
 }
 \details{
 In addition to the color functions described here, colors 

@@ -10,9 +10,9 @@
 }
 \description{
   S3 method \code{plot.plist} and function \code{plotdev} plot the plotting list 
-  to the current device.
+  to the current device. 
   Changes can be made to the perspective view, to the lighting and shading, 
-  or to make colors transparent.
+  or to make colors transparent. 
 
   \code{getplist} and \code{setplist} retrieve and store information in the plotting list.
   
@@ -50,6 +50,13 @@ selectplist(plist, SS)
   that is local to the package. One can access this plotting list via \code{getplist}
   and \code{setplist}. The list is used to plot when, in a 3-D function, the argument
   \code{plot} is \code{TRUE} or via function \code{plotdev}.
+  
+  When new 3-D objects are added to a plot, using the \code{add} argument of the 
+  plotting functions, then everything except the axes, is redrawn on top of 
+  what was already there. This means that several object will be drawn multiple times,
+  and this may clutter the output. This may not be visible on your screen, but
+  it may become apparent when exported. Use \code{plotdev} to create clean figures, where 
+  every object is drawn only  once. 
   
   The plotting \code{list} can contain the following items:
 

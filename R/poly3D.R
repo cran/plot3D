@@ -1,8 +1,8 @@
 
 # a function to create polygons from vectors
 
-add.poly <- function(poly, x, y, z, cv, col, NAcol, clim, facets, border, 
-  lwd = 1, lty = 1, ...)  {
+add.poly <- function(poly, x, y, z, cv, col, NAcol, breaks,
+  clim, facets, border, lwd = 1, lty = 1, ...)  {
 
   nr <- nrow(x) - 1
   nc <- ncol(x) - 1
@@ -34,16 +34,22 @@ add.poly <- function(poly, x, y, z, cv, col, NAcol, clim, facets, border,
     if (length(cv) == nrow(x))    # take colvar averages
       cv <- 0.5*(cv[-1] + cv[-length(cv)])
 
- # Colors for values = NA 
+ # Colors for values = NA
     if (any (is.na(cv)) & ! is.null(NAcol) ) {
       CC <- checkcolors(cv, col, NAcol, clim)
       clim   <- CC$lim
       col    <- CC$col
       cv     <- CC$colvar
     }
-    crange <- diff(clim)
-    N      <- length(col) -1
-    Col <- col[1 + trunc((cv - clim[1])/crange*N)]
+    if (is.null(breaks)) {
+      crange <- diff(clim)
+      N      <- length(col) -1
+      Col <- col[1 + trunc((cv - clim[1])/crange*N)]
+    } else {
+      zi <- .bincode(cv, breaks, TRUE, TRUE)
+      Col <- col[zi]
+      Col[is.na(Col)] <- NAcol
+    }
   } else 
     Col <- rep(col, length.out = length(cv))
       
@@ -74,7 +80,7 @@ add.poly <- function(poly, x, y, z, cv, col, NAcol, clim, facets, border,
 ## =============================================================================
 
 addimg <- function(poly, x, y, z, colvar = z, plist,
-                   col = NULL, NAcol = "white", 
+                   col = NULL, NAcol = "white", breaks = NULL,
                    border = NA, facets = TRUE, lwd = 1, lty = 1,
                    resfac = 1, clim = NULL,   
                    ltheta = -135, lphi = 0, shade = NA, 
@@ -90,7 +96,7 @@ addimg <- function(poly, x, y, z, colvar = z, plist,
 
   dot <- splitdotpersp(list(), 
                        bty = NULL, lighting, x, y, z, plist = plist, 
-                       ltheta = ltheta, lphi = lphi, shade = shade)
+                       ltheta = ltheta, lphi = lphi, shade = shade, breaks = breaks)
 
   if (! is.null(plist$xs)) {
     dot$shade$xs <- plist$scalefac$x
@@ -175,12 +181,18 @@ addimg <- function(poly, x, y, z, colvar = z, plist,
       col    <- CC$col
       colvar <- CC$colvar
     }
-    crange <- diff(clim)
-    N      <- length(col) -1
-    Col <- col[1 + trunc((colvar - clim[1])/crange*N)]
+    if (is.null(breaks)) {
+      crange <- diff(clim)
+      N      <- length(col) -1
+      Col <- col[1 + trunc((colvar - clim[1])/crange*N)]
+    } else {
+      zi <- .bincode(colvar, breaks, TRUE, TRUE)
+      Col <- col[zi]
+    }
   } else 
     Col <- rep(col, length.out = length(x))
-  
+  Col[is.na(Col)] <- NAcol
+
   if (! dot$shade$type == "none") 
     Col <- facetcols (x, y, z, Col, dot$shade)
 
@@ -212,7 +224,8 @@ addimg <- function(poly, x, y, z, colvar = z, plist,
   sl <- list (ix = ix, iy = iy, Proj = Proj, list = 1:length(ix))
   poly$img[[numimg+1]] <- list(x = X, y = Y, z = z, 
                col = matrix(nrow = nrow(colvar), 
-               ncol = ncol(colvar), data = Col), NAcol = NAcol, sl = sl, 
+               ncol = ncol(colvar), data = Col), NAcol = NAcol,
+               breaks = breaks, sl = sl,
                facets = facets, border = border, lwd = lwd, lty = lty,
                alpha = Alpha, mapped = TRUE)      
 
@@ -243,7 +256,7 @@ addlines <- function(segm, x, y, z, plist,
                              
   dot <- splitdotpersp(list(), 
                        bty = NULL, lighting, x, y, z, plist = plist, 
-                       ltheta = ltheta, lphi = lphi, shade = shade)
+                       ltheta = ltheta, lphi = lphi, shade = shade, breaks = NULL)
   if (is.null(col))
     col <- "black"
   

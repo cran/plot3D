@@ -5,7 +5,7 @@
 persp3Db <- function(x = seq(0, 1, length.out = nrow(col) +1), 
                      y = seq(0, 1, length.out = ncol(col) +1), 
                      z, col, ..., 
-                     phi = 40, theta = 40, NAcol = "white", 
+                     phi = 40, theta = 40, NAcol = "white", breaks = NULL,
                      border = NA, facets = TRUE, panel.first = NULL, bty = "b", 
                      lighting = FALSE, shade = NA, ltheta = -135, lphi = 0,
                      add = FALSE, plot = TRUE){
@@ -53,7 +53,7 @@ persp3Db <- function(x = seq(0, 1, length.out = nrow(col) +1),
   plist <- initplist(add)
         
   dot <- splitdotpersp(list(...), bty, lighting, 
-    x, y, z, plist = plist, shade, lphi, ltheta)
+    x, y, z, plist = plist, shade, lphi, ltheta, breaks = breaks)
 
   if (is.null(plist)) {
     do.call("perspbox", c(alist(x, y, z,  

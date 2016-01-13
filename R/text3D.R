@@ -6,7 +6,7 @@
     
 text3D <- function(x, y, z, labels, ..., colvar = NULL, 
                    phi = 40, theta = 40,
-                   col = NULL, NAcol = "white", 
+                   col = NULL, NAcol = "white", breaks = NULL,
                    colkey = NULL, 
                    panel.first = NULL,
                    clim = NULL, clab = NULL, bty = "b",
@@ -25,7 +25,7 @@ text3D <- function(x, y, z, labels, ..., colvar = NULL,
   if (length(labels) != length(x))
     stop("'labels' should have same length as 'x'")
 
-  dot <- splitdotpersp(list(...), bty, NULL, x, y, z, plist = plist)
+  dot <- splitdotpersp(list(...), bty, NULL, x, y, z, plist = plist, breaks = breaks)
 
   if (ispresent(colvar)) {
   
@@ -43,8 +43,12 @@ text3D <- function(x, y, z, labels, ..., colvar = NULL,
     }
 
     if (is.null(col))
-      col <- jet.col(100)
+      if (is.null(breaks))
+        col <- jet.col(100)
+      else
+        col <- jet.col(length(breaks)-1)
 
+    breaks <- check.breaks(breaks, col)
     iscolkey <- is.colkey(colkey, col)
     if (iscolkey) 
       colkey <- check.colkey(colkey)
@@ -52,7 +56,7 @@ text3D <- function(x, y, z, labels, ..., colvar = NULL,
     if (! is.null(dot$alpha)) 
       col <- setalpha(col, dot$alpha)
 
-    Col <- variablecol(colvar, col, NAcol, clim)
+    Col <- variablecol(colvar, col, NAcol, clim, breaks)
     
   } else {
     if (is.null(col))
@@ -101,7 +105,7 @@ text3D <- function(x, y, z, labels, ..., colvar = NULL,
 
   if (iscolkey) 
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
-         dot$clog, type = "label3D") 
+         dot$clog, type = "label3D", breaks = breaks)
                  
   plist <- plot.struct.3D (plist, labels = tlist, plot = plot)        
 
@@ -118,7 +122,7 @@ text3D <- function(x, y, z, labels, ..., colvar = NULL,
 ## =============================================================================
     
 text2D <- function(x, y, labels, ..., colvar = NULL, 
-                   col = NULL, NAcol = "white", 
+                   col = NULL, NAcol = "white", breaks = NULL,
                    colkey = NULL, 
                    clim = NULL, clab = NULL, add = FALSE, plot = TRUE) {
 
@@ -128,8 +132,8 @@ text2D <- function(x, y, labels, ..., colvar = NULL,
     plist <- NULL
 
   plist <- add2Dplist(plist, "text", x = x, y = y, labels = labels,
-                    colvar = colvar, col = col, NAcol = NAcol, 
-                    colkey = colkey, 
+                    colvar = colvar, col = col, NAcol = NAcol,
+                    breaks = breaks, colkey = colkey,
                     clim = clim, clab = clab, ...)
   setplist(plist)
   if (!plot) return()
@@ -147,7 +151,10 @@ text2D <- function(x, y, labels, ..., colvar = NULL,
 
   if (! is.null(colvar)) {
     if (is.null(col))
-      col <- jet.col(100)
+      if (is.null(breaks))
+        col <- jet.col(100)
+      else
+        col <- jet.col(length(breaks)-1)
 
     if (dots$clog) {
       colvar <- log(colvar)
@@ -160,6 +167,7 @@ text2D <- function(x, y, labels, ..., colvar = NULL,
       colkey <- check.colkey(colkey, add)
       if (! add)
         par.ori <- par(plt = colkey$parplt)
+      colkey$breaks <- breaks
     }
 
     if (length(colvar) != length(x))
@@ -169,7 +177,7 @@ text2D <- function(x, y, labels, ..., colvar = NULL,
       clim <- range(colvar, na.rm = TRUE)
 
     if (! is.null(dots$alpha)) col <- setalpha(col, dots$alpha)
-    Col <- variablecol(colvar, col, NAcol, clim)
+    Col <- variablecol(colvar, col, NAcol, clim, breaks)
 
   } else  {  
     Col <- col

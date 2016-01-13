@@ -16,8 +16,8 @@
 persp3D (x = seq(0, 1, length.out = nrow(z)), 
        y = seq(0, 1, length.out = ncol(z)), z, ..., 
        colvar = z, phi = 40, theta = 40,
-       col = NULL,  NAcol = "white", border = NA, facets = TRUE,
-       colkey = NULL, resfac = 1,
+       col = NULL,  NAcol = "white", breaks = NULL,
+       border = NA, facets = TRUE, colkey = NULL, resfac = 1,
        image = FALSE, contour = FALSE, panel.first = NULL,
        clim = NULL, clab = NULL, bty = "b", 
        lighting = FALSE, shade = NA, ltheta = -135, lphi = 0,
@@ -26,8 +26,8 @@ persp3D (x = seq(0, 1, length.out = nrow(z)),
 ribbon3D (x = seq(0, 1, length.out = nrow(z)), 
       y = seq(0, 1, length.out = ncol(z)), z, ..., 
       colvar = z, phi = 40, theta = 40, 
-      col = NULL,  NAcol = "white", border = NA, facets = TRUE,
-      colkey = NULL, resfac = 1, 
+      col = NULL,  NAcol = "white", breaks = NULL,
+      border = NA, facets = TRUE, colkey = NULL, resfac = 1,
       image = FALSE, contour = FALSE, panel.first = NULL,
       clim = NULL, clab = NULL, bty = "b",
       lighting = FALSE, shade = NA, ltheta = -135, lphi = 0,
@@ -37,11 +37,12 @@ ribbon3D (x = seq(0, 1, length.out = nrow(z)),
 hist3D (x = seq(0, 1, length.out = nrow(z)),
       y = seq(0, 1, length.out = ncol(z)), z, ..., 
       colvar = z, phi = 40, theta = 40, 
-      col = NULL, NAcol = "white", border = NA, facets = TRUE,
-      colkey = NULL, image = FALSE, contour = FALSE, 
+      col = NULL, NAcol = "white", breaks = NULL,
+      border = NA, facets = TRUE, colkey = NULL,
+      image = FALSE, contour = FALSE,
       panel.first = NULL, clim = NULL, clab = NULL, bty = "b", 
       lighting = FALSE, shade = NA, ltheta = -135, lphi = 0,
-      space = 0, add = FALSE, plot = TRUE)  
+      space = 0, opaque.top = FALSE, add = FALSE, plot = TRUE)  
 }
 
 \arguments{
@@ -70,7 +71,11 @@ hist3D (x = seq(0, 1, length.out = nrow(z)),
     }
   \item{NAcol }{Color to be used for \code{NA} values of \code{colvar}; default is ``white''. 
     }
- \item{colkey }{A logical, \code{NULL} (default), or a \code{list} with parameters 
+  \item{breaks }{a set of finite numeric breakpoints for the colors;
+    must have one more breakpoint than color and be in increasing order.
+    Unsorted vectors will be sorted, with a warning.
+    }
+ \item{colkey }{A logical, \code{NULL} (default), or a \code{list} with parameters
     for the color key (legend). List parameters should be one of 
     \code{side, plot, length, width, dist, shift, addlines, col.clab, cex.clab,
       side.clab, line.clab, adj.clab, font.clab}
@@ -174,6 +179,9 @@ hist3D (x = seq(0, 1, length.out = nrow(z)),
   \item{inttype }{The interpolation type to create the polygons, either 
     averaging the \code{colvar} (\code{inttype = 1, 3} or extending 
     the \code{x, y, z} values (\code{inttype = 2}) - see details.
+    } 
+  \item{opaque.top }{Only used when \code{alpha} is set (transparency):
+    if \code{TRUE} then the top of the bars is opaque.
     } 
   \item{add }{Logical. If \code{TRUE}, then the surfaces will be added to the current plot.
     If \code{FALSE} a new plot is started. 
@@ -280,8 +288,9 @@ The New S Language. Wadsworth & Brooks/Cole.
 ## =======================================================================
 
  par(mfrow = c(2, 2))
-# simple, no scaling,
- persp3D(z = volcano, main = "volcano", clab = c("height", "m"))
+# simple, no scaling, use breaks to set colors
+ persp3D(z = volcano, main = "volcano", clab = c("height", "m"), 
+   breaks = seq(80,200, by = 10))
   
 # keep ratios between x- and y (scale = FALSE) 
 # change ratio between x- and z (expand)
@@ -451,11 +460,11 @@ The New S Language. Wadsworth & Brooks/Cole.
 
  par(mfrow = c(2, 2))
  VV   <- volcano[seq(1, 87, 15), seq(1, 61, 15)]
- hist3D(z = VV, scale = FALSE, expand = 0.01)
+ hist3D(z = VV, scale = FALSE, expand = 0.01, border = "black")
 
 # transparent colors
  hist3D(z = VV, scale = FALSE, expand = 0.01, 
-   col = jet.col(100, alpha = 0.3), border = "black")
+   alpha = 0.5, opaque.top = TRUE, border = "black")
 
  hist3D(z = VV, scale = FALSE, expand = 0.01, facets = FALSE, lwd = 2)
 

@@ -22,7 +22,7 @@ createsurfs <- function (x, y, z, colvar, names = c("x", "y", "z"), resfac) {
     if (is.vector(x) & length(x) != nrow(colvar))
       stop (names[1], " should be a vector of length = nrow(colvar) or be NULL")
     else if (is.matrix(x))
-      if (any(dim(x) - dim(colvar) != 0)) 
+      if (any(dim(x) - dim(colvar) < 0) | any(dim(x) - dim(colvar) > 1))
         stop(names[1], " not compatible with 'colvar'")
   }
       
@@ -42,7 +42,7 @@ createsurfs <- function (x, y, z, colvar, names = c("x", "y", "z"), resfac) {
     if (is.vector(y) & length(y) != ncol(colvar))
       stop (names[2], " should be a vector of length = ncol(colvar) or be NULL")
     else if (is.matrix(y))
-      if (any(dim(y) - dim(colvar) != 0)) 
+      if (any(dim(y) - dim(colvar) < 0) | any(dim(y) - dim(colvar) > 1))
         stop(names[2], "not compatible with 'colvar'")
   }
   
@@ -75,7 +75,7 @@ createsurfs <- function (x, y, z, colvar, names = c("x", "y", "z"), resfac) {
 
 image3D <- function(x = NULL, y = NULL, z = NULL, ..., 
                   colvar = NULL, phi = 40, theta = 40,
-                  col = jet.col(100),  NAcol = "white", 
+                  col = NULL,  NAcol = "white", breaks = NULL,
                   border = NA, facets = TRUE,
                   colkey = NULL, resfac = 1,
                   panel.first = NULL,
@@ -113,7 +113,7 @@ image3D <- function(x = NULL, y = NULL, z = NULL, ...,
 
   pmat <- surf3D (x = x, y = y, z = z, colvar = colvar, 
                   phi = phi, theta = theta,
-                  col = col,  NAcol = NAcol, 
+                  col = col,  NAcol = NAcol, breaks = breaks,
                   border = border, facets = facets,
                   colkey = colkey, panel.first = panel.first,
                   clim = clim, clab = clab, bty = bty,

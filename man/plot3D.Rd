@@ -18,7 +18,7 @@
   Karline Soetaert
 }
 \note{
-This package is dedicated to Carlo
+This package is dedicated to Carlo.
 }
 \references{
   \url{http://www.rforscience.com/rpackages/visualisation/oceanview/}

@@ -12,7 +12,7 @@ colkey (col = NULL, clim, clab = NULL, clog = FALSE, add = FALSE,
         cex.clab = NULL, col.clab = NULL, side.clab = NULL, 
         line.clab = NULL, adj.clab = NULL, font.clab = NULL,
         side = 4, length = 1, width = 1, dist = 0, shift = 0,
-        addlines = FALSE, at = NULL, labels = TRUE, tick = TRUE, 
+        addlines = FALSE, breaks = NULL, at = NULL, labels = TRUE, tick = TRUE,
         line = NA, pos = NA, outer = FALSE, font = NA, lty = 1, lwd = 1, 
         lwd.ticks = 1, col.axis = NULL, col.ticks = NULL, col.box = NULL,
         hadj = NA, padj = NA, cex.axis = par("cex.axis"),
@@ -73,7 +73,11 @@ colkey (col = NULL, clim, clab = NULL, clog = FALSE, add = FALSE,
     } 
   \item{addlines }{If \code{TRUE}, will draw lines inbetween the colors.
     } 
-  \item{at, labels, tick, line, pos, outer, font, lty, lwd }{Additional parameters 
+  \item{breaks }{a set of finite numeric breakpoints for the colors;
+    must have one more breakpoint than color and be in increasing order.
+    Unsorted vectors will be sorted, with a warning.
+    }
+  \item{at, labels, tick, line, pos, outer, font, lty, lwd }{Additional parameters
     as from the \link{axis} command.
     } 
   \item{lwd.ticks, hadj, padj, cex.axis, mgp, tck, tcl, las }{Additional parameters 

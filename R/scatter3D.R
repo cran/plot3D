@@ -20,7 +20,7 @@ points3D <- function(x, y, z,  ...) {
     
 scatter3D <- function(x, y, z, ..., colvar = z, 
                       phi = 40, theta = 40,
-                      col = NULL, NAcol = "white", 
+                      col = NULL, NAcol = "white", breaks = NULL,
                       colkey = NULL, 
                       panel.first = NULL, clim = NULL, clab = NULL, 
                       bty = "b", CI = NULL, surf = NULL, 
@@ -28,7 +28,7 @@ scatter3D <- function(x, y, z, ..., colvar = z,
 
   plist <- initplist(add)
 
-  dot <- splitdotpersp(list(...), bty, NULL, x, y, z, plist = plist)
+  dot <- splitdotpersp(list(...), bty, NULL, x, y, z, plist = plist, breaks = breaks)
 
   x <- as.vector(x)
   y <- as.vector(y)
@@ -56,7 +56,10 @@ scatter3D <- function(x, y, z, ..., colvar = z,
     }
 
     if (is.null(col))
-      col <- jet.col(100)
+      if (is.null(breaks))
+        col <- jet.col(100)
+      else
+        col <- jet.col(length(breaks)-1)
 
     iscolkey <- is.colkey(colkey, col)
     if (iscolkey) 
@@ -65,7 +68,7 @@ scatter3D <- function(x, y, z, ..., colvar = z,
     if (! is.null(dot$alpha)) 
       col <- setalpha(col, dot$alpha)
     
-    Col <- variablecol(colvar, col, NAcol, clim)
+    Col <- variablecol(colvar, col, NAcol, clim, breaks)
     if (length(Col) == 1)
       Col <- rep(Col, length.out = len)
 
@@ -85,6 +88,7 @@ scatter3D <- function(x, y, z, ..., colvar = z,
              dot$persp))
     plist <- getplist()
   } 
+  breaks <- check.breaks(breaks, col)
 
  # droplines with a fitted surface  
   fit <- NULL
@@ -132,6 +136,9 @@ scatter3D <- function(x, y, z, ..., colvar = z,
     
     if (is.null(surf$colvar))
       surf$colvar <- surf$z
+
+    if (is.null(surf$breaks))
+      surf$breaks <- breaks
 
     if (is.null(surf[["col"]])) {
       surf$col <- col
@@ -312,6 +319,7 @@ scatter3D <- function(x, y, z, ..., colvar = z,
                z.mid = z[ii],
                col = Col[ii],
                pch = rep(pch, length.out = length(ii)),
+               lwd = rep(lwd, length.out = length(ii)),
                cex = rep(cex, length.out = length(ii)),
                bg = rep(bg, length.out = length(ii)),
                alpha = alpha
@@ -328,7 +336,8 @@ scatter3D <- function(x, y, z, ..., colvar = z,
     pt$proj <- Proj
     
   if (iscolkey) 
-    plist <- plistcolkey(plist, colkey, col, clim, clab, dot$clog, type = "scatter3D") 
+    plist <- plistcolkey(plist, colkey, col, clim, clab, dot$clog,
+      type = "scatter3D", breaks = breaks)
 
  # plot it
   plist <- plot.struct.3D(plist, pt = pt, CIpt = CIpt, 

@@ -6,7 +6,7 @@ persp3D <- function(x = seq(0, 1, length.out = nrow(z)),
                   y = seq(0, 1, length.out = ncol(z)), 
                   z, ..., colvar = z, 
                   phi = 40, theta = 40,
-                  col = NULL,  NAcol = "white", 
+                  col = NULL,  NAcol = "white", breaks = NULL,
                   border = NA, facets = TRUE,
                   colkey = NULL, resfac = 1, 
                   image = FALSE, contour = FALSE, panel.first = NULL,
@@ -17,7 +17,7 @@ persp3D <- function(x = seq(0, 1, length.out = nrow(z)),
   plist <- initplist(add)
       
   dot <- splitdotpersp(list(...), bty, lighting, 
-    x, y, z, plist = plist, shade, lphi, ltheta)
+    x, y, z, plist = plist, shade, lphi, ltheta, breaks = breaks)
     
  # check dimensionality
   if (! is.vector(x) & length(dim(x)) == 1)
@@ -96,8 +96,8 @@ persp3D <- function(x = seq(0, 1, length.out = nrow(z)),
 
   if (is.null(colvar) & is.matrix(col)) {
     pmat <- persp3Db(x = x, y = y, z = z, col = col, ..., 
-             phi = phi, theta = theta, NAcol = NAcol, border = border, 
-             facets = facets, panel.first = panel.first,
+             phi = phi, theta = theta, NAcol = NAcol, breaks = breaks,
+             border = border, facets = facets, panel.first = panel.first,
              bty = bty, lighting = lighting, shade = shade, ltheta = ltheta,
              lphi = lphi, add = add, plot = plot)
     return(invisible(pmat))
@@ -111,8 +111,12 @@ persp3D <- function(x = seq(0, 1, length.out = nrow(z)),
       stop("cannot combine 'x' a matrix and 'contour'")
 
   cv <- colvar
-  cvlim <- clim
-        
+
+  if (is.null(col) & is.null(breaks))
+   col <- jet.col(100)
+  else if (is.null(col))
+   col <- jet.col(length(breaks)-1)
+
  # check colvar and colors
   CC <- check.colvar.persp(colvar, z, col, inttype, clim, dot$alpha)
   colvar <- CC$colvar
@@ -121,9 +125,12 @@ persp3D <- function(x = seq(0, 1, length.out = nrow(z)),
   Extend <- inttype == 2
   
   if (ispresent(colvar)) {
-    if (is.null(clim)) 
+
+    if (is.null(clim) & is.null(breaks))
       clim <- range(colvar, na.rm = TRUE)
-     
+    else if (is.null(clim))
+      clim <- range(breaks, na.rm = TRUE)
+
     iscolkey <- is.colkey(colkey, col)
     if (iscolkey) 
       colkey <- check.colkey(colkey)
@@ -142,7 +149,9 @@ persp3D <- function(x = seq(0, 1, length.out = nrow(z)),
                      colkey = colkey, col = col), dot$persp))
     plist <- getplist()
   }
-  
+
+  breaks <- check.breaks(breaks, col)
+
   if (is.function(panel.first)) 
     panel.first(plist$mat)         
 
@@ -158,7 +167,7 @@ persp3D <- function(x = seq(0, 1, length.out = nrow(z)),
   lty <- ifelse (is.null (dot$points$lty), 1, dot$points$lty)
 
   Poly <- paintit (colvar, X, Y, z, plist, col, NAcol, clim, 
-           border, facets, lwd, lty, dot, Extend, cv = cv, cvlim = cvlim)
+           border, facets, lwd, lty, dot, Extend, breaks = breaks)
 
   if (curtain) {
     P <- list(x = NULL, y = NULL, col = NULL, border = NULL, 
@@ -171,19 +180,19 @@ persp3D <- function(x = seq(0, 1, length.out = nrow(z)),
     P <- add.poly(P, 
           cbind(rep(x[1], Ny), rep(x[1], Ny)), cbind(y, y), 
           cbind(rep(zmin, Ny), z[1,]), colvar[1,], 
-          col, NAcol, clim, facets, border, lwd, lty)
+          col, NAcol, breaks, clim, facets, border, lwd, lty)
     P <- add.poly(P, 
           cbind(rep(x[Nx], Ny), rep(x[Nx], Ny)), cbind(y, y), 
           cbind(rep(zmin, Ny), z[Nx,]), colvar[Nx-1,], 
-          col, NAcol, clim, facets, border, lwd, lty)
+          col, NAcol, breaks, clim, facets, border, lwd, lty)
     P <- add.poly(P, 
           cbind(x, x), cbind(rep(y[1], Nx), rep(y[1], Nx)), 
           cbind(rep(zmin, Nx), z[,1]), colvar[, 1], 
-          col, NAcol, clim, facets, border, lwd, lty)
+          col, NAcol, breaks, clim, facets, border, lwd, lty)
     P <- add.poly(P, 
           cbind(x, x), cbind(rep(y[Ny], Nx), rep(y[Ny], Nx)), 
           cbind(rep(zmin, Nx), z[,Ny]), colvar[, Ny-1], 
-          col, NAcol, clim, facets, border, lwd, lty)
+          col, NAcol, breaks, clim, facets, border, lwd, lty)
     if (! dot$shade$type == "none") {
       P <- color3D(P, plist$scalefac, dot$shade, lighting)
       if (!facets) P$col[] <- "white"
@@ -213,7 +222,7 @@ persp3D <- function(x = seq(0, 1, length.out = nrow(z)),
    
  # images and contours
   if (image$add) 
-    Poly <- XYimage (Poly, image, x, y, z, plist, col) 
+    Poly <- XYimage (Poly, image, x, y, z, plist, col, breaks = breaks)
 
   if (contour$add) 
     segm <- contourfunc(contour, x, y, z, plist, cv = cv, clim = clim)
@@ -222,7 +231,7 @@ persp3D <- function(x = seq(0, 1, length.out = nrow(z)),
 
   if (iscolkey) 
     plist <- plistcolkey(plist, colkey, col, clim, clab, dot$clog, 
-      type = "persp3D") 
+      type = "persp3D", breaks = breaks)
 
   plist <- plot.struct.3D(plist, poly = Poly, segm = segm, plot = plot)  
 

@@ -291,10 +291,11 @@ update.3D <- function(plist, pt = NULL, CIpt = NULL, poly = NULL,
     plist$pt$y.mid  <- c(plist$pt$y.mid,  pt$y.mid)
     plist$pt$z.mid  <- c(plist$pt$z.mid,  pt$z.mid)
     plist$pt$col    <- c(plist$pt$col,    pt$col)
-    plist$pt$pch    <- c(plist$pt$pch,    pt$pch)   
+    plist$pt$pch    <- c(plist$pt$pch,    pt$pch)
     plist$pt$bg     <- c(plist$pt$bg,     pt$bg)
     plist$pt$cex    <- c(plist$pt$cex,    pt$cex)   
-    plist$pt$alpha  <- c(plist$pt$alpha,  pt$alpha)   
+    plist$pt$lwd    <- c(plist$pt$lwd,    pt$lwd)
+    plist$pt$alpha  <- c(plist$pt$alpha,  pt$alpha)
     plist$pt$proj   <- c(plist$pt$proj,   pt$proj)
   }
 
@@ -477,6 +478,7 @@ plotlist3D <- function(plist) {
                col = pt$col[sortlist], 
                pch = pt$pch[sortlist],
                cex = pt$cex[sortlist], 
+               lwd = pt$lwd[sortlist],
                bg  = pt$bg[sortlist])
 
       } else if (!is.null(poly)) {  # only polygons
@@ -680,9 +682,7 @@ selectplist <- function (plist, SS) {
       img <- plist$img[[i]]
       
      # because col has one row and column less than x, y, z 
-      Col <- img$col.full
-      if (is.null(Col)) 
-        Col <- img$col
+      Col <- img$col
       if (nrow(Col) != nrow(img$z))
         Col <- rbind(Col, Col[nrow(Col),])
       if (ncol(Col) != ncol(img$z))
@@ -742,19 +742,11 @@ selectplist <- function (plist, SS) {
           plist$img[[i]]$y <- img$y[xsel, ysel]
         
         plist$img[[i]]$z <- img$z[xsel, ysel]
-        plist$img[[i]]$col <- plist$img[[i]]$col.full <- Col[xsel, ysel]
+        plist$img[[i]]$col <- Col[xsel, ysel]
         imgxrange <- range( c(imgxrange, plist$img[[i]]$x), na.rm = TRUE) 
         imgyrange <- range( c(imgyrange, plist$img[[i]]$y), na.rm = TRUE) 
         imgzrange <- range( c(imgzrange, plist$img[[i]]$z), na.rm = TRUE) 
 
-# Too complicated - toggle off ? 
-#        isel <- which (plist$img[[i]]$sl$ix >= xr[1] & plist$img[[i]]$sl$ix <= xr[2] &
-#                       plist$img[[i]]$sl$iy >= yr[1] & plist$img[[i]]$sl$iy <= yr[2])
-#        plist$img[[i]]$sl$ix <-plist$img[[i]]$sl$ix[isel]-xr[1]+1 
-#        plist$img[[i]]$sl$iy <-plist$img[[i]]$sl$iy[isel]-yr[1]+1 
-
-#        plist$img[[i]]$sl$list <-plist$img[[i]]$sl$list[isel] - (xr[1]*yr[1]) + 1
-#        plist$img[[i]]$sl$Proj <-plist$img[[i]]$sl$Proj[isel] 
 
       } else {
         plist$img[[i]] <- NULL    

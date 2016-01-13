@@ -83,7 +83,8 @@ contour3D <- function(x = NULL, y = NULL, z = NULL, ...,
 
   plist <- initplist(add)
 
-  dot <- splitdotpersp(list(...), bty, FALSE, xlim, ylim, zlim, plist = plist)
+  dot <- splitdotpersp(list(...), bty, FALSE, xlim, ylim, zlim,
+    plist = plist, breaks = NULL)
 
   dots <- dot$points    
   levels <- dots$levels
@@ -188,7 +189,7 @@ contour3D <- function(x = NULL, y = NULL, z = NULL, ...,
       clim <- range(levels) + dz
     }
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
-      dot$clog, type = "contour3D") 
+      dot$clog, type = "contour3D", breaks = NULL)
   }
   plist <- plot.struct.3D(plist, segm = segm, plot = plot)  
 

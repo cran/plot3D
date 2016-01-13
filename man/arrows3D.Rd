@@ -26,63 +26,63 @@
 \usage{
 arrows3D (x0, y0, z0, x1 = x0, y1 = y0, z1 = z0, ...,  
          colvar = NULL, phi = 40, theta = 40,
-         col = NULL, NAcol = "white", 
+         col = NULL, NAcol = "white", breaks = NULL,
          colkey = NULL, panel.first = NULL,
          clim = NULL, clab = NULL, bty = "b", type = "triangle", 
          add = FALSE, plot = TRUE)
 
 segments3D (x0, y0, z0, x1 = x0, y1 = y0, z1 = z0, ..., 
          colvar = NULL, phi = 40, theta = 40,
-         col = NULL, NAcol = "white", 
+         col = NULL, NAcol = "white", breaks = NULL,
          colkey = NULL, panel.first = NULL,
          clim = NULL, clab = NULL, bty = "b", 
          add = FALSE, plot = TRUE)
 
 box3D (x0, y0, z0, x1, y1, z1, ..., 
          colvar = NULL, phi = 40, theta = 40,
-         col = NULL, NAcol = "white", border = NA, facets = TRUE,
-         colkey = NULL, panel.first = NULL,
-         clim = NULL, clab = NULL, bty = "b", 
+         col = NULL, NAcol = "white", breaks = NULL,
+         border = NA, facets = TRUE, colkey = NULL,
+         panel.first = NULL, clim = NULL, clab = NULL, bty = "b",
          add = FALSE, plot = TRUE)
 
 border3D(x0, y0, z0, x1, y1, z1, ..., 
          colvar = NULL, phi = 40, theta = 40,
-         col = NULL, NAcol = "white", 
+         col = NULL, NAcol = "white", breaks = NULL,
          colkey = NULL, panel.first = NULL,
          clim = NULL, clab = NULL, bty = "b", 
          add = FALSE, plot = TRUE)  
 
 rect3D (x0, y0, z0, x1 = NULL, y1 = NULL, z1 = NULL, ..., 
          colvar = NULL, phi = 40, theta = 40,
-         col = NULL, NAcol = "white", border = NA, facets = TRUE,
-         colkey = NULL, panel.first = NULL,
-         clim = NULL, clab = NULL, bty = "b", 
+         col = NULL, NAcol = "white", breaks = NULL,
+         border = NA, facets = TRUE, colkey = NULL,
+         panel.first = NULL, clim = NULL, clab = NULL, bty = "b",
          add = FALSE, plot = TRUE)
 
 polygon3D (x, y, z, ..., 
          colvar = NULL, phi = 40, theta = 40,
-         col = NULL, NAcol = "white", border = NA, facets = TRUE,
-         colkey = NULL, panel.first = NULL,
-         clim = NULL, clab = NULL, bty = "b", 
+         col = NULL, NAcol = "white", breaks = NULL,
+         border = NA, facets = TRUE, colkey = NULL,
+         panel.first = NULL, clim = NULL, clab = NULL, bty = "b",
          add = FALSE, plot = TRUE)  
          
 arrows2D (x0, y0, x1 = x0, y1 = y0, ..., colvar = NULL,
-         col = NULL, NAcol = "white",
+         col = NULL, NAcol = "white", breaks = NULL,
          colkey = NULL, clim = NULL, clab = NULL, 
          type = "triangle", add = FALSE, plot = TRUE)  
 
 segments2D (x0, y0, x1 = x0, y1 = y0, ..., colvar = NULL,
-         col = NULL, NAcol = "white",
+         col = NULL, NAcol = "white", breaks = NULL,
          colkey = NULL, clim = NULL, clab = NULL, 
          add = FALSE, plot = TRUE) 
 
 rect2D (x0, y0, x1 = x0, y1 = y0, ..., colvar = NULL,
-         col = NULL, NAcol = "white",
+         col = NULL, NAcol = "white", breaks = NULL,
          colkey = NULL, clim = NULL, clab = NULL, 
          add = FALSE, plot = TRUE) 
          
 polygon2D (x, y, ..., colvar = NULL, 
-         col = NULL, NAcol = "white", 
+         col = NULL, NAcol = "white", breaks = NULL,
          border = NA, facets = TRUE,
          colkey = NULL, clim = NULL, clab = NULL, 
          add = FALSE, plot = TRUE)
@@ -119,7 +119,11 @@ polygon2D (x, y, ..., colvar = NULL,
     }
   \item{NAcol }{Colors to be used for \code{colvar} values that are \code{NA}.
     }
-  \item{colkey }{A logical, \code{NULL} (default), or a \code{list} with parameters 
+  \item{breaks }{a set of finite numeric breakpoints for the colors;
+    must have one more breakpoint than color and be in increasing order.
+    Unsorted vectors will be sorted, with a warning.
+    }
+  \item{colkey }{A logical, \code{NULL} (default), or a \code{list} with parameters
     for the color key (legend). List parameters should be one of 
     \code{side, plot, length, width, dist, shift, addlines, col.clab, cex.clab,
       side.clab, line.clab, adj.clab, font.clab}
@@ -296,7 +300,7 @@ polygon2D (x, y, ..., colvar = NULL,
 ## rectangles
 ## ========================================================================
 # at constant 'z'
- rect3D(x0 = seq(-0.8, -0.1, by = 0.1), 
+ rect3D(x0 = seq(-0.8, -0.1, by = 0.1),
         y0 = seq(-0.8, -0.1, by = 0.1),
         z0 = seq(-0.8, -0.1, by = 0.1),
         x1 = seq(0.8, 0.1, by = -0.1),
@@ -367,16 +371,16 @@ polygon2D (x, y, ..., colvar = NULL,
 ## 2D examples, with color key
 ## ========================================================================
 
-arrows2D(x0 = runif(10), y0 = runif(10), 
+arrows2D(x0 = runif(10), y0 = runif(10),
          x1 = runif(10), y1 = runif(10), colvar = 1:10, 
          code = 3, main = "arrows2D, segments2D")
 
-segments2D(x0 = runif(10), y0 = runif(10), 
+segments2D(x0 = runif(10), y0 = runif(10),
          x1 = runif(10), y1 = runif(10), colvar = 1:10, 
          lwd = 2, add = TRUE, colkey = FALSE) 
 
 # transparency
-rect2D(x0 = runif(10), y0 = runif(10), 
+rect2D(x0 = runif(10), y0 = runif(10),
        x1 = runif(10), y1 = runif(10), colvar = 1:10, 
        alpha = 0.4, lwd = 2, main = "rect2D") 
 
@@ -399,7 +403,7 @@ rect2D(x0 = runif(10), y0 = runif(10),
 # transparent colors (alpha)
  polygon2D(x, y, border = "black", lwd = 3,
    colvar = 1:(length(ii) + 1), 
-   col = gg.col(), alpha = 0.2, 
+   col = gg.col(), alpha = 0.2,
    main = "polygon2D")
 
 # restore plotting parameters

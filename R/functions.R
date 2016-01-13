@@ -239,7 +239,7 @@ contourfunc <- function(contour, x, y, z, plist, cv = NULL,
 ## polygons if image is to be drawn on bottom or top panel
 ## =============================================================================
 
-XYimage <- function(poly, image, x, y, z,  plist, col) { 
+XYimage <- function(poly, image, x, y, z,  plist, col, breaks) {
 
   if (is.null(image$args$col))
     image$args$col <- col
@@ -278,7 +278,7 @@ XYimage <- function(poly, image, x, y, z,  plist, col) {
 
     zmat <- matrix(nrow = length(x), ncol = length(y), data = zz)           
     poly <- do.call("addimg", c(alist(poly, x, y, z = zmat, 
-        colvar = z, plist = plist, lwd = lwd, lty = lty), image$args))
+        colvar = z, breaks = breaks, plist = plist, lwd = lwd, lty = lty), image$args))
         
   }                                                
   return(poly)
@@ -519,15 +519,20 @@ remapxyNA <- function(z, x, y, xto, yto) {
 ## Generates color vector based on variable values
 ## =============================================================================
 
-variablecol <- function(colvar, col, NAcol, clim) {
+variablecol <- function(colvar, col, NAcol, clim, breaks) {
  
-  ncol <- length(col)
+  if (is.null(breaks)) {
+    ncol <- length(col)
   
-  colvar[colvar < min(clim)] <- NA
-  colvar[colvar > max(clim)] <- NA
-  rn <- clim[2] - clim[1]
-  ifelse (rn != 0, Col <- col[1 + trunc((colvar - clim[1])/rn * 
-    (ncol - 1))], Col <- rep(col[1], ncol))
+    colvar[colvar < min(clim)] <- NA
+    colvar[colvar > max(clim)] <- NA
+    rn <- clim[2] - clim[1]
+    ifelse (rn != 0, Col <- col[1 + trunc((colvar - clim[1])/rn *
+      (ncol - 1)+1e-15)], Col <- rep(col[1], ncol))               # + tiny: since R 3.2.2
+  } else {
+      zi <- .bincode(colvar, breaks, TRUE, TRUE)
+      Col <- col[zi]
+  }
   Col[is.na(Col)] <- NAcol
   return(Col)
 }
@@ -537,7 +542,7 @@ variablecol <- function(colvar, col, NAcol, clim) {
 ## =============================================================================
 
 checkcolors <- function(colvar, col, NAcol, lim) {
-  
+
   colvar[colvar < min(lim)] <- NA
   colvar[colvar > max(lim)] <- NA
 
@@ -649,7 +654,7 @@ check.colvar.persp <- function(colvar, z, col, inttype, clim, alpha) {
     else if (inttype != 2){
       if (all (dim(colvar) - dim(z)) == 0)
         colvar <- meangrid(colvar, inttype == 3)  # averages of colvar
-      else if (any (dim(colvar) - dim(z)) != -1)
+      else if (any (dim(colvar) - dim(z) != -1))
         stop("dimension of 'colvar' should be equal to dimension of 'z' or have one row and one column less")    
     }
     
@@ -759,7 +764,7 @@ check.shade <- function(shadedots, lighting) {
 
 splitdotpersp <- function(dots, bty = "b", lighting = NULL, 
    x = NULL, y = NULL, z = NULL, plist = NULL,
-   shade = NA, lphi = 0, ltheta = -135) { 
+   shade = NA, lphi = 0, ltheta = -135, breaks) {
 
   dots$bty <- bty
 
@@ -786,7 +791,11 @@ splitdotpersp <- function(dots, bty = "b", lighting = NULL,
       } 
     } 
   }
-  
+  if (clog & ! is.null(breaks)) {
+    warning("cannot combine log = 'c' and 'breaks' - removing log = 'c'")
+    clog <- FALSE
+  }
+
  # labels        
   if (is.null(dots$xlab)) 
     dots$xlab <- "x"
@@ -919,7 +928,7 @@ splitpardots <- function(dots) {
   # plotting parameters : split in plot parameters and point parameters
   plotnames <- c("xlab", "ylab", "zlab", "xlim", "ylim", "zlim", 
                  "main", "sub", "log", "asp", "bty", 
-                 "xaxs", "yaxs", "xaxt", "yaxt", 
+                 "xaxs", "yaxs", "xaxt", "yaxt", "breaks",
                  "ann", "axes", "frame.plot", "panel.first", "panel.last",
                  "cex.lab", "col.lab", "font.lab", "las", "tck", "tcl", "mgp", 
                  "cex.axis", "col.axis", "font.axis", 

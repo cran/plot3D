@@ -5,7 +5,7 @@
 
 addslice <- function(poly, x, y, z, colvar, xs = NULL, 
                      ys = NULL, zs = NULL, plist,
-                     col = NULL, NAcol = "white",
+                     col = NULL, NAcol = "white", breaks = NULL,
                      border = NA, facets = TRUE, lwd = 1, lty = 1, 
                      clim = NULL, shadedot = NULL,
                      lighting = FALSE, alpha = NULL)  {
@@ -55,7 +55,8 @@ addslice <- function(poly, x, y, z, colvar, xs = NULL,
 
    # add polygon
     poly <<- addimg(poly, xs, ys, zs, colvar = cv, plist = plist, 
-        col = col, NAcol = NAcol, border = border, facets = facets, 
+        col = col, NAcol = NAcol, breaks = breaks,
+        border = border, facets = facets,
         resfac = 1, clim = clim, lwd = lwd, lty = lty, 
         ltheta = shadedot$ltheta, lphi = shadedot$lphi, 
         shade = shadedot$shade, lighting = lighting, alpha = alpha)
@@ -108,7 +109,7 @@ slice3D <- function(x, y, z, colvar, ...,
                     xs = min(x),
                     ys = max(y),
                     zs = min(z),
-                    col = jet.col(100), NAcol = "white", 
+                    col = NULL, NAcol = "white", breaks = NULL,
                     border = NA, facets = TRUE, 
                     colkey = NULL, panel.first = NULL,
                     clim = NULL, clab = NULL, bty = "b",
@@ -117,12 +118,20 @@ slice3D <- function(x, y, z, colvar, ...,
 
   plist <- initplist(add)
 
-  dot <- splitdotpersp(list(...), bty, lighting, x, y, z, plist = plist, shade, lphi, ltheta)
+  dot <- splitdotpersp(list(...), bty, lighting, x, y, z, plist = plist,
+    shade, lphi, ltheta, breaks = breaks)
 
-  iscolkey <- is.colkey(colkey, col)    
+    if (is.null(col))
+      if (is.null(breaks))
+        col <- jet.col(100)
+      else
+        col <- jet.col(length(breaks)-1)
+
+  iscolkey <- is.colkey(colkey, col)
   if (iscolkey) 
     colkey <- check.colkey(colkey)
 
+  breaks <- check.breaks(breaks, col)
   if (! is.null(dot$alpha)) col <- setalpha(col, dot$alpha)
 
   if (is.null(clim))
@@ -150,13 +159,14 @@ slice3D <- function(x, y, z, colvar, ...,
   dot$points$lty <- NULL
 
   Poly <- addslice(NULL, x, y, z, colvar, xs = xs, ys = ys, zs = zs, plist = plist,
-                   col = col, NAcol = NAcol, border = border, facets = facets,
+                   col = col, NAcol = NAcol, breaks = breaks,
+                   border = border, facets = facets,
                    clim = clim, shadedot = dot$shade, lwd = lwd, lty = lty,
                    lighting = lighting, alpha = dot$alpha)
    
   if (iscolkey)  
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
-      dot$clog, type = "slice3D") 
+      dot$clog, type = "slice3D", breaks = breaks)
  
   plist <- plot.struct.3D(plist, poly = Poly, plot = plot)  
 

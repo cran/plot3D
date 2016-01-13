@@ -6,12 +6,13 @@
 voxel3D <- function(x, y, z, colvar, ..., 
                     phi = 40, theta = 40, 
                     level = mean(colvar, na.rm = TRUE), eps = 0.01,
-                    operator = "=", col = jet.col(100), 
+                    operator = "=", col = NULL,
+                    NAcol = "white", breaks = NULL, colkey = FALSE,
                     panel.first = NULL, bty = "b", 
                     add = FALSE, plot = TRUE) {
   plist <- initplist(add)
 
-  dot <- splitdotpersp(list(...), bty, NULL, x, y, z, plist = plist)
+  dot <- splitdotpersp(list(...), bty, NULL, x, y, z, plist = plist, breaks = breaks)
 
   if (length(level) != 1 & operator != "<>" )
     stop ("'level' should be one number if 'operator' not equal to '<>'")
@@ -21,7 +22,7 @@ voxel3D <- function(x, y, z, colvar, ...,
   if (is.null(plist)) {
     do.call("perspbox", c(alist(x = range(x), y = range(y), 
              z = range(z, na.rm = TRUE),
-             phi = phi, theta = theta, colkey = FALSE, plot = plot, 
+             phi = phi, theta = theta, colkey = colkey, plot = plot,
              col = col), dot$persp))
     plist <- getplist()
   }  
@@ -40,8 +41,8 @@ voxel3D <- function(x, y, z, colvar, ...,
     colvar <- vox$cv    
   
   do.call("scatter3D", c(alist(x = vox$x, y = vox$y, z = vox$z, 
-          add = TRUE, col = col, colkey = FALSE, plot = plot, 
-          alpha = dot$alpha), dot$points))
+          add = TRUE, col = col, NAcol = NAcol, breaks = breaks,
+          colkey = FALSE, plot = plot, alpha = dot$alpha), dot$points))
   plist <- getplist()
   invisible(plist$mat)
 }

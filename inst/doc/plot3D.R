@@ -377,3 +377,93 @@ colkey(clim = c(0, 115), clab = c("O2 saturation", "percent"))
     col = "black", plot = TRUE)
 
 
+###################################################
+### code chunk number 24: Fit
+###################################################
+nout <- 30
+xout <-  with(iris, seq(min(Sepal.Length), max(Sepal.Length), length = nout))
+yout <-  with(iris, seq(min(Sepal.Width) , max(Sepal.Width),  length = nout))
+
+xy  <- expand.grid(Sepal.Length = xout, Sepal.Width = yout)
+
+# Fit two models, linear and quadratic
+mod   <- with(iris, lm(Petal.Length ~Sepal.Length  + Sepal.Width))
+mod2  <- with(iris, lm(Petal.Length ~Sepal.Length  + Sepal.Width +
+                       I(Sepal.Length^2) + I(Sepal.Width^2) +
+                       I(Sepal.Length*Sepal.Width)))
+# prodict at new values
+zpred.1 <- matrix(
+   predict(mod, newdata = xy), nrow = nout, ncol = nout)
+zpred.2 <- matrix(
+   predict(mod2, newdata = xy), nrow = nout, ncol = nout)
+
+# make graph, postpone plotting till the end
+par(mfrow = c(1, 2))
+
+with(iris,
+  scatter3D(Sepal.Length, Sepal.Width, Petal.Length,
+            colvar = as.numeric(Species), colkey = FALSE,
+            col = c("blue", "red", "gold"), bty = "b",
+            xlab = 'SL', ylab = 'PL', zlab = 'SW', zlim = c(1, 9),
+            pch = 16, cex = 2, theta = 0, plot = FALSE))
+
+persp3D(x = xout, y = yout, z = zpred.1, facets = NA,
+  add = TRUE, col = "blue", plot = FALSE)
+
+persp3D(x = xout, y = yout, z = zpred.2,
+  add = TRUE, col = "green", plot = FALSE)
+
+# plot using traditional device
+plotdev(theta = -50, alpha = 0.5)
+plotdev(theta = -50, alpha = 0.5, zlim = c(1, 9))
+
+# if you want to see this in rgl:
+# library(plot3Drgl)
+#plotrgl(alpha = 0.5)
+
+
+###################################################
+### code chunk number 25: Fit
+###################################################
+nout <- 30
+xout <-  with(iris, seq(min(Sepal.Length), max(Sepal.Length), length = nout))
+yout <-  with(iris, seq(min(Sepal.Width) , max(Sepal.Width),  length = nout))
+
+xy  <- expand.grid(Sepal.Length = xout, Sepal.Width = yout)
+
+# Fit two models, linear and quadratic
+mod   <- with(iris, lm(Petal.Length ~Sepal.Length  + Sepal.Width))
+mod2  <- with(iris, lm(Petal.Length ~Sepal.Length  + Sepal.Width +
+                       I(Sepal.Length^2) + I(Sepal.Width^2) +
+                       I(Sepal.Length*Sepal.Width)))
+# prodict at new values
+zpred.1 <- matrix(
+   predict(mod, newdata = xy), nrow = nout, ncol = nout)
+zpred.2 <- matrix(
+   predict(mod2, newdata = xy), nrow = nout, ncol = nout)
+
+# make graph, postpone plotting till the end
+par(mfrow = c(1, 2))
+
+with(iris,
+  scatter3D(Sepal.Length, Sepal.Width, Petal.Length,
+            colvar = as.numeric(Species), colkey = FALSE,
+            col = c("blue", "red", "gold"), bty = "b",
+            xlab = 'SL', ylab = 'PL', zlab = 'SW', zlim = c(1, 9),
+            pch = 16, cex = 2, theta = 0, plot = FALSE))
+
+persp3D(x = xout, y = yout, z = zpred.1, facets = NA,
+  add = TRUE, col = "blue", plot = FALSE)
+
+persp3D(x = xout, y = yout, z = zpred.2,
+  add = TRUE, col = "green", plot = FALSE)
+
+# plot using traditional device
+plotdev(theta = -50, alpha = 0.5)
+plotdev(theta = -50, alpha = 0.5, zlim = c(1, 9))
+
+# if you want to see this in rgl:
+# library(plot3Drgl)
+#plotrgl(alpha = 0.5)
+
+

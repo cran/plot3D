@@ -26,8 +26,8 @@ slicecont3D <- function(x, y, z, colvar, ...,
                    xs = NULL,
                    ys = NULL,
                    zs = NULL, level = NULL,
-                   col = jet.col(100), NAcol = "white", 
-                   border = NA, facets = TRUE, 
+                   col = NULL, NAcol = "white", breaks = NULL,
+                   border = NA, facets = TRUE,
                    colkey = NULL, panel.first = NULL,
                    clim = NULL, clab = NULL, bty = "b", 
                    dDepth = 0., add = FALSE, plot = TRUE) {
@@ -37,7 +37,7 @@ slicecont3D <- function(x, y, z, colvar, ...,
   else
     plist <- NULL
 
-  dot <- splitdotpersp(list(...), bty, NULL, x, y, z, plist = plist)
+  dot <- splitdotpersp(list(...), bty, NULL, x, y, z, plist = plist, breaks = breaks)
 
   if (! ispresent(colvar))
     stop("'colvar' has to be defined and be an array of dimension 3")
@@ -63,8 +63,11 @@ slicecont3D <- function(x, y, z, colvar, ...,
     if (! is.vector(zs))
       stop("'zs' should be a vector")
     
-  if (is.null(col)) 
+  if (is.null(col) & is.null(breaks))
     col <- jet.col(100)
+  else if (is.null(col))
+    col <- jet.col(length(breaks)-1)
+  breaks <- check.breaks(breaks, col)
 
   if (! is.null(dot$alpha)) 
     col <- setalpha(col, dot$alpha)
@@ -92,8 +95,12 @@ slicecont3D <- function(x, y, z, colvar, ...,
   crange <- diff(clim)
   N      <- length(col) -1
 
-  getcol <- function(v) 
-    col[1 + trunc((v - clim[1])/crange*N)]
+  if (is.null(breaks))
+    getcol <- function(v)
+      col[1 + trunc((v - clim[1])/crange*N)]
+  else
+    getcol <- function(v)
+      col[.bincode(v,breaks)]
 
   lwd <- ifelse(is.null(dot$points$lwd), 1, dot$points$lwd)
   dot$points$lwd <- NULL
@@ -161,7 +168,7 @@ slicecont3D <- function(x, y, z, colvar, ...,
 
   if (iscolkey) 
     plist <- plistcolkey(plist, colkey, col, clim, clab, dot$clog, 
-      type = "slicecont3D") 
+      type = "slicecont3D", breaks = NULL)
 
   if (ispresent(border)) {
     for (x.s in xs) 

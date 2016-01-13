@@ -5,6 +5,7 @@ S3method("image2D", "list")
 S3method("plot", "plist")
 
 importFrom(misc3d, computeContour3d)
+import("grDevices", "graphics", "stats")
 
 export(jet.col, jet2.col, gg.col, gg2.col, ramp.col, alpha.col)
 export(colkey, mesh, trans3D)

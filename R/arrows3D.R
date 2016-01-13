@@ -4,14 +4,14 @@
 
 arrows3D  <- function(x0, y0, z0, x1 = x0, y1 = y0, z1 = z0,
                     ..., colvar = NULL, phi = 40, theta = 40,
-                    col = NULL, NAcol = "white", 
+                    col = NULL, NAcol = "white", breaks = NULL,
                     colkey = NULL, panel.first = NULL,
                     clim = NULL, clab = NULL, bty = "b", type = "triangle",
                     add = FALSE, plot = TRUE)  {
   plist <- initplist(add)
 
   dot  <- splitdotpersp(list(...), bty, NULL, 
-    c(x0, x1), c(y0, y1), c(z0, z1), plist = plist)
+    c(x0, x1), c(y0, y1), c(z0, z1), plist = plist, breaks = breaks)
 
   len <- length(x0)
   if (length(y0) != len)
@@ -25,19 +25,22 @@ arrows3D  <- function(x0, y0, z0, x1 = x0, y1 = y0, z1 = z0,
   if (length(z1) != len)
     stop("'z1' should have same length as 'x0'")
 
-  if (ispresent(colvar)) { 
+  if (is.null(col) & is.null(breaks))
+    col <- jet.col(100)
+  else if (is.null(col))
+    col <- jet.col(length(breaks)-1)
+
+  breaks <- check.breaks(breaks, col)
+  if (ispresent(colvar)) {
     if (length(colvar) != len)
       stop("'colvar' should have same length as 'x0', 'y0' and 'z0'")
-    
-    if (is.null(col))
-      col <- jet.col(100)
-    
+
     if (length(col) == 1)
       col <- c(col, col)
 
-    if (is.null(clim)) 
+    if (is.null(clim))
       clim <- range(colvar, na.rm = TRUE)
-    
+
     if (dot$clog) {                    
       colvar <- log(colvar)
       clim <- log(clim)
@@ -48,7 +51,7 @@ arrows3D  <- function(x0, y0, z0, x1 = x0, y1 = y0, z1 = z0,
       colkey <- check.colkey(colkey)
     if (! is.null(dot$alpha)) 
       col <- setalpha(col, dot$alpha)
-    Col <- variablecol(colvar, col, NAcol, clim)
+    Col <- variablecol(colvar, col, NAcol, clim, breaks)
 
   } else {
     if (is.null(col))
@@ -114,7 +117,7 @@ arrows3D  <- function(x0, y0, z0, x1 = x0, y1 = y0, z1 = z0,
 
   if (iscolkey) 
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
-      dot$clog, type = "arrows3D") 
+      dot$clog, type = "arrows3D", breaks = breaks)
 
   plist <- plot.struct.3D(plist, arr = arr, plot = plot)  
 

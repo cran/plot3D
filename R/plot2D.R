@@ -188,6 +188,7 @@ add2Dplist <- function(plist, method, ...) {
   }
 
   plist$twoD <- p
+  plist$colkeyargs <- dots$colkey
   class(plist) <- c("plist","list")
   plist
 }
@@ -199,7 +200,7 @@ add2Dplist <- function(plist, method, ...) {
 # x, y, colvar: vector or matrix of same dimension
 
 plot2D <- function(x0, y0, x1, y1, ..., colvar = NULL,
-                    col = NULL, NAcol = "white",
+                    col = NULL, NAcol = "white", breaks = NULL,
                     colkey = NULL,
                     clim = NULL, clab = NULL, add = FALSE,
                     plot = TRUE, method = "arrows") {
@@ -207,14 +208,15 @@ plot2D <- function(x0, y0, x1, y1, ..., colvar = NULL,
   plist <- initplist(add)
 
   plist <- add2Dplist(plist, method, x0 = x0, y0 = y0, x1 = x1, y1 = y1, 
-    colvar = colvar, col = col, NAcol = NAcol, colkey = colkey, clim = clim,
-    clab = clab, ...)
+    colvar = colvar, col = col, NAcol = NAcol, breaks = breaks,
+    colkey = colkey, clim = clim, clab = clab, ...)
   setplist(plist)
 
   if (!plot) return()
   dots <- splitpardots(list(...))
 
  # colors
+  breaks <- check.breaks(breaks, col)
   if (! is.null(colvar)) {
     if (is.null(col))
       col <- jet.col(100)
@@ -231,7 +233,8 @@ plot2D <- function(x0, y0, x1, y1, ..., colvar = NULL,
       colkey <- check.colkey(colkey)
       if (! add)       
         plist$plt$main <- colkey$parplt
-      setplist(plist)    
+      setplist(plist)
+      colkey$breaks <- breaks
     }
 
     if (length(colvar) != length(x0))
@@ -242,7 +245,7 @@ plot2D <- function(x0, y0, x1, y1, ..., colvar = NULL,
 
     if (! is.null(dots$alpha)) 
       col <- setalpha(col, dots$alpha)
-    Col <- variablecol(colvar, col, NAcol, clim)
+    Col <- variablecol(colvar, col, NAcol, clim, breaks)
 
   } else  {  # no colvar
     Col <- col
@@ -270,34 +273,34 @@ plot2D <- function(x0, y0, x1, y1, ..., colvar = NULL,
 ## specific plot functions (2-D)
 ## =============================================================================
 arrows2D <- function(x0, y0, x1 = x0, y1 = y0,..., colvar = NULL,
-                    col = NULL, NAcol = "white", 
+                    col = NULL, NAcol = "white", breaks = NULL,
                     colkey = NULL,
                     clim = NULL, clab = NULL, 
                     type = "triangle", add = FALSE, plot = TRUE)  
   plot2D (x0, y0, x1, y1, ..., colvar = colvar,
-                    col = col, NAcol = NAcol,
+                    col = col, NAcol = NAcol, breaks = breaks,
                     colkey = colkey, type = type,
                     clim = clim, clab = clab, add = add,
                     plot = plot, method = "ArrType")
 
 ## =============================================================================
 segments2D <- function(x0, y0, x1 = x0, y1 = y0, ..., colvar = NULL,
-                    col = NULL, NAcol = "white",
+                    col = NULL, NAcol = "white", breaks = NULL,
                     colkey = NULL,
                     clim = NULL, clab = NULL, add = FALSE, plot = TRUE) 
   plot2D (x0, y0, x1, y1, ..., colvar = colvar,
-                    col = col, NAcol = NAcol,
+                    col = col, NAcol = NAcol, breaks = breaks,
                     colkey = colkey,
                     clim = clim, clab = clab, add = add,
                     plot = plot, method = "segments")
 
 ## =============================================================================
 rect2D <- function(x0, y0, x1 = x0, y1 = y0, ..., colvar = NULL,
-                    col = NULL, NAcol = "white",
+                    col = NULL, NAcol = "white", breaks = NULL,
                     colkey = NULL,
                     clim = NULL, clab = NULL, add = FALSE, plot = TRUE) 
   plot2D (x0, y0, x1, y1, ..., colvar = colvar,
-                    col = col, NAcol = NAcol,
+                    col = col, NAcol = NAcol, breaks = breaks,
                     colkey = colkey,
                     clim = clim, clab = clab, add = add,
                     plot = plot, method = "rect")

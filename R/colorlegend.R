@@ -131,12 +131,15 @@ key.parleg <- function(colkey, add) {   # the plotting parameters
 ## =============================================================================
 
 plistcolkey <- function (plist, colkeypar, col, zlim, zlab = NULL, 
-                         zlog = FALSE, New = TRUE, type = "scatter3D")  {
+                         zlog = FALSE, New = TRUE,
+                         type = "scatter3D", breaks)  {
   if (is.null(plist$colkey))  {
     plist$colkey <- list()
     plist$numkeys <- 1
   } else
     plist$numkeys <- plist$numkeys + 1
+  if (! is.null(breaks))
+    colkeypar$breaks <- breaks
 
   plist$colkey[[plist$numkeys]] <- list(par = colkeypar, col = col, 
     clim = zlim, clab = zlab, clog = zlog, New = New, type = type)
@@ -180,8 +183,21 @@ drawcolkey <- function (colkeypar, col, clim, clab = NULL,
   ix <- 1
   minz <- min(clim)
   maxz <- max(clim)
-  nbins <- length(col) 
+# the parameters for the axis
+  axispar <- colkeypar
+  nbins <- length(col)
   binwidth <- (maxz - minz)/nbins
+  if (! is.null(axispar$breaks)) {
+    nbreaks <- length(axispar$breaks)
+    axispar$labels <- axispar$breaks
+    minz <- 0.5
+    maxz <- nbreaks+0.5
+    clim <- c(minz, maxz)
+    binwidth <- (maxz - minz)/nbins
+    iyb <- seq(minz, maxz, by = binwidth)
+    if (clog) iyb <- exp(iyb)
+
+  }
   iy <- IY <- seq(minz + binwidth/2, maxz - binwidth/2, by = binwidth)
   if (clim[1] > clim[2])
     col <- rev(col)
@@ -198,13 +214,13 @@ drawcolkey <- function (colkeypar, col, clim, clab = NULL,
   if (! is.numeric(cex.clab)) 
     cex.clab <- 1.
 
-# the parameters for the axis
-  axispar <- colkeypar
+  if (! is.null(axispar$breaks))
+    axispar$at <- iyb
 
 # remove arguments not in axis function
   axispar$side <- axispar$length <- axispar$width <- axispar$plot <- NULL
   axispar$parleg <- axispar$parplt <- axispar$dist <- NULL
-  axispar$shift <-axispar$col.box <- NULL  
+  axispar$shift <-axispar$col.box <- axispar$breaks <- NULL
   axispar$col.clab <- axispar$cex.clab <- axispar$side.clab <- NULL
   axispar$line.clab <- axispar$adj.clab <- axispar$font.clab <- NULL
   axispar$addlines <- NULL
@@ -274,26 +290,31 @@ drawcolkey <- function (colkeypar, col, clim, clab = NULL,
 ## =============================================================================
 ## =============================================================================
 
-colkey <- function(col = NULL, clim, clab = NULL, clog = FALSE, add = FALSE, 
+colkey <- function(col = NULL, clim, clab = NULL, clog = FALSE, add = FALSE,
                    cex.clab = NULL, col.clab = NULL, side.clab = NULL, 
                    line.clab = NULL, adj.clab = NULL, font.clab = NULL,
                    side = 4, length = 1, width = 1, 
                    dist = 0, shift = 0, addlines = FALSE, 
-                   at = NULL, labels = TRUE, 
+                   breaks = NULL, at = NULL, labels = TRUE,
                    tick = TRUE, line = NA, pos = NA, outer = FALSE,  
                    font = NA, lty = 1, lwd = 1, lwd.ticks = 1, 
                    col.axis = NULL, col.ticks = NULL, col.box = NULL,
                    hadj = NA, padj = NA, cex.axis = par("cex.axis"),
                    mgp = NULL, tck = NULL, tcl = NULL, las = NULL) {
 
-  if (is.null(col)) 
-    col <- jet.col(100)
-  
+  if (is.null(col))
+    if (is.null(breaks))
+      col <- jet.col(100)
+    else
+      col <- jet.col(length(breaks) - 1)
+  breaks <- check.breaks(breaks, col)
+  if (! is.null(breaks))
+    clim <- range(breaks)
   colkey <- list(side = side, plot = TRUE, length = length, width = width, 
       dist = dist, shift = shift, addlines = addlines, 
       cex.clab = cex.clab, col.clab = col.clab,
       side.clab = side.clab, line.clab = line.clab, adj.clab = adj.clab,
-      font.clab = font.clab, 
+      font.clab = font.clab, breaks = breaks,
       at = at, labels = labels, tick = tick, line = line, 
       pos = pos, outer = outer, font = font, lty = lty, lwd = lwd, 
       lwd.ticks = lwd.ticks, col.box = col.box, col.axis = col.axis, 

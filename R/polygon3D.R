@@ -4,7 +4,7 @@
 
 polygon3D  <- function(x, y, z, 
                     ..., colvar = NULL, phi = 40, theta = 40,
-                    col = NULL, NAcol = "white", 
+                    col = NULL, NAcol = "white", breaks = NULL,
                     border = NA, facets = TRUE,
                     colkey = NULL, panel.first = NULL,
                     clim = NULL, clab = NULL, bty = "b", 
@@ -12,7 +12,7 @@ polygon3D  <- function(x, y, z,
 
   plist <- initplist(add)
 
-  dot  <- splitdotpersp(list(...), bty, NULL, x, y, z, plist = plist)
+  dot  <- splitdotpersp(list(...), bty, NULL, x, y, z, plist = plist, breaks = breaks)
 
   checkinput <- function (x) {
     if (is.matrix(x)) {
@@ -61,6 +61,7 @@ polygon3D  <- function(x, y, z,
     yy <- matrix(ncol = 1, data = c(y, NA)) 
     zz <- matrix(ncol = 1, data = c(z, NA)) 
   }
+  breaks <- check.breaks(breaks, col)
 
   if (ispresent(colvar)) { 
     if (length(colvar) != len)
@@ -86,7 +87,7 @@ polygon3D  <- function(x, y, z,
      
     if (! is.null(dot$alpha)) 
       col <- setalpha(col, dot$alpha)
-    Col <- variablecol(colvar, col, NAcol, clim) 
+    Col <- variablecol(colvar, col, NAcol, clim, breaks)
 
   } else {
     if (is.null(col))
@@ -137,7 +138,7 @@ polygon3D  <- function(x, y, z,
 
   if (iscolkey) 
     plist <- plistcolkey(plist, colkey, col, clim, clab, dot$clog, 
-      type = "polygon3D") 
+      type = "polygon3D", breaks = breaks)
 
   plist <- plot.struct.3D(plist, poly = Poly, plot = plot)  
 
@@ -150,7 +151,7 @@ polygon3D  <- function(x, y, z,
 ## =============================================================================
 
 polygon2D  <- function(x, y, ..., colvar = NULL, 
-                    col = NULL, NAcol = "white", 
+                    col = NULL, NAcol = "white", breaks = NULL,
                     border = NA, facets = TRUE,
                     colkey = NULL, 
                     clim = NULL, clab = NULL, add = FALSE, plot = TRUE)  {
@@ -158,7 +159,8 @@ polygon2D  <- function(x, y, ..., colvar = NULL,
   plist <- initplist(add)
 
   plist <- add2Dplist(plist, "polygon", x = x, y = y, colvar = colvar,
-                    col = col, NAcol = NAcol, border = border, facets = facets,
+                    col = col, NAcol = NAcol, breaks = breaks,
+                    border = border, facets = facets,
                     colkey = colkey, clim = clim,
                     clab = clab, ...)
   setplist(plist)
@@ -207,8 +209,8 @@ polygon2D  <- function(x, y, ..., colvar = NULL,
     xx <- matrix(ncol = 1, data = c(x, NA)) 
     yy <- matrix(ncol = 1, data = c(y, NA)) 
   }
-
-  if (ispresent(colvar)) { 
+  breaks <- check.breaks(breaks, col)
+  if (ispresent(colvar)) {
     if (length(colvar) != len)
       stop("'colvar' should have same length as number of polygons (= 1+ number of NAs in 'x', 'y' and 'z')")
     
@@ -231,11 +233,13 @@ polygon2D  <- function(x, y, ..., colvar = NULL,
       colkey <- check.colkey(colkey, add)
       if (! add)
         par.ori <- par(plt = colkey$parplt)
+      colkey$breaks <- breaks
+
     }
      
     if (! is.null(dots$alpha)) 
       col <- setalpha(col, dots$alpha)
-    Col <- variablecol(colvar, col, NAcol, clim) 
+    Col <- variablecol(colvar, col, NAcol, clim, breaks)
 
   } else {
     if (is.null(col))

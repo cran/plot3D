@@ -28,7 +28,7 @@
 \usage{
 slice3D (x, y, z, colvar, ..., phi = 40, theta = 40,
          xs = min(x), ys = max(y), zs = min(z),
-         col = jet.col(100), NAcol = "white", 
+         col = NULL, NAcol = "white", breaks = NULL,
          border = NA, facets = TRUE, colkey = NULL, 
          panel.first = NULL, clim = NULL, 
          clab = NULL, bty = "b", 
@@ -37,7 +37,7 @@ slice3D (x, y, z, colvar, ..., phi = 40, theta = 40,
 
 slicecont3D (x, y, z, colvar, ..., phi = 40, theta = 40,
          xs = NULL, ys = NULL, zs = NULL, level = NULL,
-         col = jet.col(100), NAcol = "white", 
+         col = NULL, NAcol = "white", breaks = NULL,
          border = NA, facets = TRUE, 
          colkey = NULL, panel.first = NULL,
          clim = NULL, clab = NULL, bty = "b", 
@@ -53,11 +53,11 @@ isosurf3D (x, y, z, colvar, ..., phi = 40, theta = 40,
 
 voxel3D (x, y, z, colvar, ..., phi = 40, theta = 40, 
          level = mean(colvar, na.rm = TRUE), eps = 0.01, operator = "=", 
-         col = jet.col(100), panel.first = NULL, 
-         bty = "b", add = FALSE, plot = TRUE) 
+         col = NULL, NAcol = "white", breaks = NULL, colkey = FALSE,
+         panel.first = NULL, bty = "b", add = FALSE, plot = TRUE)
 
 triangle3D (tri, colvar = NULL, ..., phi = 40, theta = 40,
-           col = NULL, NAcol = "white", 
+           col = NULL, NAcol = "white", breaks = NULL,
            border = NA, facets = TRUE,
            colkey = NULL, panel.first = NULL,
            lighting = FALSE, shade = 0.5, ltheta = -135, lphi = 0, 
@@ -97,6 +97,10 @@ createvoxel (x, y, z, colvar, level = mean(colvar, na.rm = TRUE), eps = 0.01,
     then a red-yellow-blue colorscheme (\link{jet.col}) will be used.
     }
   \item{NAcol }{Colors to be used for \code{colvar} values that are \code{NA}.
+    }
+  \item{breaks }{a set of finite numeric breakpoints for the colors;
+    must have one more breakpoint than color and be in increasing order.
+    Unsorted vectors will be sorted, with a warning.
     }
   \item{border }{The color of the lines drawn around the surface facets.
     The default, \code{NA}, will disable the drawing of borders.

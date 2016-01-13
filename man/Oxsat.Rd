@@ -92,7 +92,7 @@ data(Oxsat)
 \references{
   \url{http://www.nodc.noaa.gov}
 
-  \url{ftp://ftp.nodc.noaa.gov/pub/data.nodc/woa/WOA05nc/seasonal/}
+  \code{ftp://ftp.nodc.noaa.gov/pub/data.nodc/woa/WOA05nc/seasonal/}
   
   Originally made available by CSIRO:
   

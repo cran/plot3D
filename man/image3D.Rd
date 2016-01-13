@@ -8,10 +8,9 @@
 }
 \usage{
 image3D (x = NULL, y = NULL, z = NULL, ..., colvar = NULL, 
-      phi = 40, theta = 40, col = jet.col(100), 
-      NAcol = "white", border = NA, facets = TRUE,
-      colkey = NULL, resfac = 1,
-      panel.first = NULL,
+      phi = 40, theta = 40, col = NULL,
+      NAcol = "white", breaks = NULL, border = NA, facets = TRUE,
+      colkey = NULL, resfac = 1, panel.first = NULL,
       clim = NULL, clab = NULL, bty = "b",
       inttype = 1, add = FALSE, plot = TRUE)
 }
@@ -33,7 +32,11 @@ image3D (x = NULL, y = NULL, z = NULL, ..., colvar = NULL,
     }
   \item{NAcol }{Color to be used for \code{NA} values of \code{colvar}; default is ``white''. 
     }
- \item{colkey }{A logical, \code{NULL} (default), or a \code{list} with parameters 
+  \item{breaks }{a set of finite numeric breakpoints for the colors;
+    must have one more breakpoint than color and be in increasing order.
+    Unsorted vectors will be sorted, with a warning.
+    }
+ \item{colkey }{A logical, \code{NULL} (default), or a \code{list} with parameters
     for the color key (legend). List parameters should be one of 
     \code{side, plot, length, width, dist, shift, addlines, col.clab, cex.clab,
       side.clab, line.clab, adj.clab, font.clab}

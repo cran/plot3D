@@ -9,7 +9,7 @@
 
 border3D  <- function(x0, y0, z0, x1, y1, z1,
                    ..., colvar = NULL, phi = 40, theta = 40,
-                   col = NULL, NAcol = "white",
+                   col = NULL, NAcol = "white", breaks = NULL,
                    colkey = NULL, 
                    panel.first = NULL,
                    clim = NULL, clab = NULL, bty = "b", 
@@ -18,7 +18,7 @@ border3D  <- function(x0, y0, z0, x1, y1, z1,
   plist <- initplist(add)
   
   dot  <- splitdotpersp(list(...), bty, NULL, 
-    c(x0, x1), c(y0, y1), c(z0, z1), plist = plist)
+    c(x0, x1), c(y0, y1), c(z0, z1), plist = plist, breaks = breaks)
 
   len <- length(x0)
   if (length(y0) != len)
@@ -32,12 +32,17 @@ border3D  <- function(x0, y0, z0, x1, y1, z1,
   if (length(z1) != len)
     stop("'z1' should have same length as 'x0'")
 
+  if (is.null(col) & is.null(breaks))
+    col <- jet.col(100)
+  else if (is.null(col))
+    col <- jet.col(length(breaks)-1)
+
+  breaks <- check.breaks(breaks, col)
+
+
   if (ispresent(colvar)) {
     if (length(colvar) != len)
       stop("'colvar' should have same length as 'x0', 'y0' and 'z0'")
-
-    if (is.null(col))
-      col <- jet.col(100)
 
     if (length(col) == 1)
       col <- c(col, col)
@@ -51,12 +56,14 @@ border3D  <- function(x0, y0, z0, x1, y1, z1,
     }
 
     iscolkey <- is.colkey(colkey, col)
-    if (iscolkey) 
+    if (iscolkey) {
       colkey <- check.colkey(colkey)
+      colkey$breaks <- breaks
+    }
 
     if (! is.null(dot$alpha)) 
       col <- setalpha(col, dot$alpha)
-    Col <- variablecol(colvar, col, NAcol, clim) 
+    Col <- variablecol(colvar, col, NAcol, clim, breaks)
 
   } else {
     if (is.null(col))
@@ -123,7 +130,7 @@ border3D  <- function(x0, y0, z0, x1, y1, z1,
 
   if (iscolkey) 
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
-      dot$clog, type = "border3D")
+      dot$clog, type = "border3D", breaks = breaks)
 
   plist <- plot.struct.3D(plist, segm = segm, plot = plot)
 
@@ -137,7 +144,7 @@ border3D  <- function(x0, y0, z0, x1, y1, z1,
 
 rect3D  <- function(x0, y0, z0, x1 = NULL, y1 = NULL, z1 = NULL,
                    ..., colvar = NULL, phi = 40, theta = 40,
-                   col = NULL, NAcol = "white",
+                   col = NULL, NAcol = "white", breaks = NULL,
                    border = NA, facets = TRUE,
                    colkey = NULL, panel.first = NULL,
                    clim = NULL, clab = NULL, bty = "b", 
@@ -145,8 +152,8 @@ rect3D  <- function(x0, y0, z0, x1 = NULL, y1 = NULL, z1 = NULL,
 
   plist <- initplist(add)
 
-  dot  <- splitdotpersp(list(...), bty, NULL, c(x0, x1), c(y0, y1), c(z0, z1), 
-    plist = plist)
+  dot  <- splitdotpersp(list(...), bty, NULL, c(x0, x1),
+    c(y0, y1), c(z0, z1), plist = plist, breaks = breaks)
 
   len <- length(x0)
   if (length(y0) != len)
@@ -169,12 +176,16 @@ rect3D  <- function(x0, y0, z0, x1 = NULL, y1 = NULL, z1 = NULL,
     if (length(z1) != len)
       stop("'z1' should have same length as 'x0' if not NULL")
 
+  if (is.null(col) & is.null(breaks))
+    col <- jet.col(100)
+  else if (is.null(col))
+    col <- jet.col(length(breaks)-1)
+
+  breaks <- check.breaks(breaks, col)
+
   if (ispresent(colvar)) {
     if (length(colvar) != len)
       stop("'colvar' should have same length as 'x0', 'y0' and 'z0'")
-
-    if (is.null(col))
-      col <- jet.col(100)
 
     if (length(col) == 1)
       col <- c(col, col)
@@ -193,7 +204,7 @@ rect3D  <- function(x0, y0, z0, x1 = NULL, y1 = NULL, z1 = NULL,
 
     if (! is.null(dot$alpha)) 
       col <- setalpha(col, dot$alpha)
-    Col <- variablecol(colvar, col, NAcol, clim) 
+    Col <- variablecol(colvar, col, NAcol, clim, breaks)
 
   } else {
     if (is.null(col))
@@ -267,7 +278,7 @@ rect3D  <- function(x0, y0, z0, x1 = NULL, y1 = NULL, z1 = NULL,
 
   if (iscolkey ) 
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
-      dot$clog, type = "rect3D")
+      dot$clog, type = "rect3D", breaks = breaks)
 
   plist <- plot.struct.3D(plist, poly = poly, plot = plot)
 
@@ -281,7 +292,7 @@ rect3D  <- function(x0, y0, z0, x1 = NULL, y1 = NULL, z1 = NULL,
 
 box3D  <- function(x0, y0, z0, x1, y1, z1,
                    ...,  colvar = NULL, phi = 40, theta = 40,
-                   col = NULL, NAcol = "white",
+                   col = NULL, NAcol = "white", breaks = NULL,
                    border = NA, facets = TRUE,
                    colkey = NULL, panel.first = NULL,
                    clim = NULL, clab = NULL, bty = "b", 
@@ -289,8 +300,8 @@ box3D  <- function(x0, y0, z0, x1, y1, z1,
 
   plist <- initplist(add)
 
-  dot  <- splitdotpersp(list(...), bty, NULL, c(x0, x1), c(y0, y1), c(z0, z1), 
-    plist = plist)
+  dot  <- splitdotpersp(list(...), bty, NULL, c(x0, x1),
+    c(y0, y1), c(z0, z1), plist = plist, breaks = breaks)
 
   len <- length(x0)
   if (length(y0) != len)
@@ -304,12 +315,16 @@ box3D  <- function(x0, y0, z0, x1, y1, z1,
   if (length(z1) != len)
     stop("'z1' should have same length as 'x0'")
 
+  if (is.null(col) & is.null(breaks))
+    col <- jet.col(100)
+  else if (is.null(col))
+    col <- jet.col(length(breaks)-1)
+
+  breaks <- check.breaks(breaks, col)
+
   if (ispresent(colvar)) {
     if (length(colvar) != len)
       stop("'colvar' should have same length as 'x0', 'y0' and 'z0'")
-
-    if (is.null(col))
-      col <- jet.col(100)
 
     if (length(col) == 1)
       col <- c(col, col)
@@ -328,7 +343,7 @@ box3D  <- function(x0, y0, z0, x1, y1, z1,
 
     if (! is.null(dot$alpha)) 
       col <- setalpha(col, dot$alpha)
-    Col <- variablecol(colvar, col, NAcol, clim) 
+    Col <- variablecol(colvar, col, NAcol, clim, breaks)
 
   } else {
     if (is.null(col))
@@ -392,7 +407,7 @@ box3D  <- function(x0, y0, z0, x1, y1, z1,
       lwd    = c(poly$lwd,    rep(lwd[i], length.out = 6)),
       lty    = c(poly$lty,    rep(lty[i], length.out = 6)),
       isimg  = c(poly$isimg,  rep(0, length.out = 6)),
-      alpha  = c(poly$alpha, alpha)
+      alpha  = c(poly$alpha, rep(alpha, length.out = 6))
       
     )
   }
@@ -404,7 +419,7 @@ box3D  <- function(x0, y0, z0, x1, y1, z1,
 
   if (iscolkey ) 
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
-      dot$clog, type = "box3D")
+      dot$clog, type = "box3D", breaks = breaks)
 
   plist <- plot.struct.3D(plist, poly = poly, plot = plot)
 

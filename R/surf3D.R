@@ -5,7 +5,7 @@
 
 surf3D <- function(x, y, z, ..., 
                    colvar = z, phi = 40, theta = 40,
-                   col = jet.col(100), NAcol = "white", 
+                   col = NULL, NAcol = "white", breaks = NULL,
                    border = NA, facets = TRUE,
                    colkey = NULL, 
                    panel.first = NULL,
@@ -37,6 +37,12 @@ surf3D <- function(x, y, z, ...,
     colvar <- NULL
   }
 
+  if (is.null(col))
+    if (is.null(breaks))
+      col <- jet.col(100)
+    else
+      col <- jet.col(length(breaks)-1)
+
   if (is.null(colvar) & is.matrix(col)) {
     pmat <- persp3Db(x = x, y = y, z = z, col = col, ..., 
              phi = phi, theta = theta, NAcol = NAcol, border = border, 
@@ -48,10 +54,7 @@ surf3D <- function(x, y, z, ...,
   plist <- initplist(add)
 
   dot <- splitdotpersp(list(...), bty, lighting, 
-    x, y, z, plist = plist, shade, lphi, ltheta)
-  
-  cv <- colvar
-  cvlim <- clim
+    x, y, z, plist = plist, shade, lphi, ltheta, breaks = breaks)
   
   CC <- check.colvar.persp(colvar, z, col, inttype, clim, dot$alpha)
   colvar <- CC$colvar
@@ -83,17 +86,18 @@ surf3D <- function(x, y, z, ...,
              colkey = colkey, col = col), dot$persp))
     plist <- getplist()
   }
-  if (is.function(panel.first)) 
+  breaks <- check.breaks(breaks, col)
+  if (is.function(panel.first))
     panel.first(plist$mat)  
            
  # polygons using painters algorithm
   Poly <- paintit(colvar, x, y, z, plist, col, NAcol, clim, border, 
           facets, dot$points$lwd, dot$points$lty, dot, Extend, 
-          cv = cv, cvlim = cvlim)
+          breaks = breaks)
 
   if (iscolkey)  
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
-          dot$clog, type = "surf3D") 
+          dot$clog, type = "surf3D", breaks = breaks)
 
   plist <- plot.struct.3D(plist, poly = Poly, plot = plot)  
 

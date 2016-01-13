@@ -14,7 +14,7 @@ image2D.default <- function (z, ...) image2D.matrix(z, ...)
 
 image2D.matrix <- function (z, x = seq(0, 1, length.out = nrow(z)), 
                    y = seq(0, 1, length.out = ncol(z)), colvar = z, ..., 
-                   col = jet.col(100), NAcol = "white", 
+                   col = NULL, NAcol = "white", breaks = NULL,
                    border = NA, facets = TRUE, contour = FALSE, 
                    colkey = NULL, resfac = 1, clab = NULL, 
                    lighting = FALSE, shade = NA, ltheta = -135, lphi = 0,
@@ -27,9 +27,9 @@ image2D.matrix <- function (z, x = seq(0, 1, length.out = nrow(z)),
   plist <- initplist(add)
 
   plist <- add2Dplist(plist, "image", z = z, x = x, y = y, 
-                    col = col, NAcol = NAcol, border = border, facets = facets,
-                    contour = contour, colkey = colkey, resfac = resfac,
-                    clab = clab, theta = theta, rasterImage = rasterImage, 
+            col = col, NAcol = NAcol, breaks = breaks, border = border,
+            facets = facets, contour = contour, colkey = colkey, resfac = resfac,
+            clab = clab, theta = theta, rasterImage = rasterImage,
                     ...)
   setplist(plist)
   if (!plot) return()
@@ -40,6 +40,11 @@ image2D.matrix <- function (z, x = seq(0, 1, length.out = nrow(z)),
               rasterImage = rasterImage, angle = theta, add = add)   
    return(invisible())
   } 
+
+  if (is.null(col) & is.null(breaks))
+    col <- jet.col(100)
+  else if (is.null(col))
+    col <- jet.col(length(breaks)-1)
 
   if (length(col) == 1)
     if (is.na(col)) 
@@ -54,10 +59,14 @@ image2D.matrix <- function (z, x = seq(0, 1, length.out = nrow(z)),
     colkey <- check.colkey(colkey)
     if (! add)       
       plist$plt$main <- colkey$parplt
-    setplist(plist)    
-  }  
+    setplist(plist)
+    colkey$breaks <- breaks
+  }
   par (plt = plist$plt$main)
-  
+
+
+  breaks <- check.breaks(breaks, col)
+
  # check contours
   iscontour <- ! is.null(contour)
   if (length(contour) == 0) 
@@ -167,12 +176,18 @@ image2D.matrix <- function (z, x = seq(0, 1, length.out = nrow(z)),
     height <- z
     z <- colvar
   }
-  
-  if (is.matrix(x)) {  # ..but not if x and y are matrix 
+  Extend <- TRUE
+
+  if (is.matrix(x)) {
     if (any (dim(x) - dim(y) != 0))
       stop("matrices 'x' and 'y' not of same dimension") 
-    if (any (dim(x) - dim(z) != 0))                             
-      stop("matrices 'x' or 'y' and 'z' not of same dimension") 
+    if (any (dim(x) - dim(z) > 0)) {
+      if ((nrow(x) - nrow(z)) != (ncol(x) - ncol(z)))
+        stop("matrices 'x' or 'y' and 'z' not compatible - should either be of dim(z) or dim(z)+1")
+      if (any(dim(x) - dim(z) > 1))
+        stop("matrices 'x' or 'y' and 'z' not compatible - should either be of dim(z) or dim(z)+1")
+      Extend <- FALSE
+    }
     useimage <- FALSE
   } 
   
@@ -215,23 +230,38 @@ image2D.matrix <- function (z, x = seq(0, 1, length.out = nrow(z)),
   
     if (length(which(!is.na(z))) == 0)
       zlim <- c(0, 1)
-    else 
+    else if (is.null(breaks))
       zlim <- range(z, na.rm = TRUE)
-  } else 
+    else
+      zlim <- range(breaks, na.rm = TRUE)
+  } else
     if (zlog) 
       zlim  <- log(zlim )
-                                
-  if (! is.null(dots$alpha)) 
+
+  if (! is.null(dots$alpha))
     col <- setalpha(col, dots$alpha)
   colkeyZlim <- zlim
   colkeyCol  <- col
   
+
+
  # Colors for values = NA 
-  if (any (is.na(z)) & ! is.null(NAcol) ) {
-    CC <- checkcolors(z, col, NAcol, zlim)
-    zlim  <- CC$lim
-    col <- CC$col
-    z <- CC$colvar
+  if (! is.null(NAcol) ) {             #    any (is.na(z)) &
+    if (! is.null(breaks)) {
+      col <- c(NAcol, col, NAcol)
+      breaks <- c(min(c(z, breaks), na.rm = TRUE)-1, breaks,
+                  max(c(z, breaks), na.rm = TRUE)+1)
+       z[z < min(zlim)] <- NA
+       z[z > max(zlim)] <- NA
+       z[is.na(z)] <- breaks[1]
+
+    } else {
+      nc <- length(col)
+      CC <- checkcolors(z, col, NAcol, zlim)
+      zlim  <- CC$lim
+      col <- CC$col
+      z <- CC$colvar
+    }
   }
 
   if (! facets | is.na(facets)) {
@@ -246,7 +276,7 @@ image2D.matrix <- function (z, x = seq(0, 1, length.out = nrow(z)),
   if (! useimage | rasterImage) {  # use colored polygons if x- and y are matrix
 
     # create colors
-    Col    <- variablecol (z, col, NAcol, zlim)
+    Col    <- variablecol (z, col, NAcol, zlim, breaks)
 
     if (! is.na(shade) | lighting) 
       Col <- facetcolsImage(x, y, height, dotimage[["xlim"]], dotimage[["ylim"]], 
@@ -271,7 +301,7 @@ image2D.matrix <- function (z, x = seq(0, 1, length.out = nrow(z)),
   
   if (! useimage ) {
     # function to draw polygon
-    poly <- polyfill2D (x, y, Col, facets, border, dots$lwd, dots$lty) 
+    poly <- polyfill2D (x, y, Col, facets, border, dots$lwd, dots$lty, Extend)
 
     dots$lwd <- NULL
     do.call("polygon", c(alist(poly$x, poly$y, lwd = poly$lwd, 
@@ -280,21 +310,25 @@ image2D.matrix <- function (z, x = seq(0, 1, length.out = nrow(z)),
  
   } else if (rasterImage) {
     Col <- matrix(nrow = nrow(z), data = Col)
-    addraster (x, y, Col, dotimage[["xlim"]], dotimage[["ylim"]], 
+    addraster (x, y, Col, dotimage[["xlim"]], dotimage[["ylim"]],
       theta, dotother)
 
-  } else {                  
-    do.call("image", c(alist(z = z, x = x, y = y, col = col, add = add, 
-      zlim = zlim), dotimage))
+  } else {
+    dotimage$breaks <- breaks
+    do.call("image", c(alist(z = z, x = x, y = y, col = col, add = add,
+        zlim = zlim), dotimage))
   }
 
   if (useimage & !is.na(border)) {
     do.call("abline", c(alist(h = 0.5*(y[-1]+y[-length(y)]), col = border), dotother))
     do.call("abline", c(alist(v = 0.5*(x[-1]+x[-length(x)]), col = border), dotother))
   }
-  if (!add) 
+  if (is.null(dotimage$frame.plot)) {
+    if (!add)
+      box()
+  } else if (dotimage$frame.plot)
     box()
-  
+    
   # contours
   if (iscontour) {
     if (zlog) 

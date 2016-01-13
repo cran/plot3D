@@ -1,3 +1,18 @@
+check.breaks <- function (breaks, col) {  # adapted from image.default (graphics package)
+  if (! is.null(breaks)) {
+     nbreaks <- length(breaks)
+     if (length(col) != nbreaks-1)
+       stop("must have one more break than col - suggest to use jet.col(", nbreaks-1, ")")
+
+  if (any(!is.finite(breaks)))
+            stop("'breaks' must all be finite")
+  if (is.unsorted(breaks)) {
+            warning("unsorted 'breaks' will be sorted before use")
+            breaks <- sort(breaks)
+         }
+  }
+  return (breaks)
+}
 
 ## =============================================================================
 ## Add image polygons, inputs are all matrices
@@ -6,7 +21,7 @@
 paintit  <- function (colvar, x, y, z, plist, col, NAcol, clim,
                      border, facets, lwd, lty, dot, 
                      Extend = FALSE, Polar = FALSE, 
-                     cv = NULL, cvlim = NULL) {        
+                     breaks = NULL) {
 
   dotshade <- dot$shade  
   if (! is.null(clim)) {
@@ -16,8 +31,6 @@ paintit  <- function (colvar, x, y, z, plist, col, NAcol, clim,
     colvar[colvar > max(clim)] <- NA
   }  
             
-  cv <- cvlim <- NULL # copy of colvar and range
-  
  # Check the plotting arguments x and y
   if (! is.matrix(x))
     stop("'x' should be a matrix")
@@ -35,7 +48,7 @@ paintit  <- function (colvar, x, y, z, plist, col, NAcol, clim,
     else  
       Col <- rep(Col, length(x[-1,-1]))  
 
-  } else if (any (is.na(colvar)) & ! is.null(NAcol) ) {
+  } else if (any (is.na(colvar)) & ! is.null(NAcol)& is.null(breaks)) {
     CC <- checkcolors(colvar, col, NAcol, clim)
     col <- CC$col
     colvar <- CC$colvar
@@ -47,9 +60,14 @@ paintit  <- function (colvar, x, y, z, plist, col, NAcol, clim,
   N      <- length(col) -1
 
   # the colors, 1.000..1 to avoid that trunc(1) = 0  
-  if (ispresent(colvar)) 
-    Col <- col[1 + trunc((colvar - cmin)/crange*1.00000000001*N)]
-  
+  if (ispresent(colvar))
+    if (is.null(breaks))
+      Col <- col[1 + trunc((colvar - cmin)/crange*1.00000000001*N)]
+    else {
+      zi <- .bincode(colvar, breaks, TRUE, TRUE)
+      Col <- col[zi]
+      Col[is.na(Col)] <- NAcol
+    }
   if (Extend) {
     x <- extend(x)
     y <- extend(y)
@@ -63,19 +81,10 @@ paintit  <- function (colvar, x, y, z, plist, col, NAcol, clim,
 
   imgcol <- matrix(nrow = nrow(x) - 1, ncol = ncol(x) -1, data = Col)
   
-  col.full <- NULL
-  if (! is.null(cv)) {
-    if (is.null(cvlim)) 
-      cvlim <- range(cv)
-    cvmin <- cvlim[1]
-    cvrange <- diff(cvlim)
-    col.full <- col[1 + trunc((cv - cvmin)/cvrange*1.00000000001*N)]
-    col.full <- matrix(nrow = nrow(x), ncol = ncol(x), data = col.full)
-  }
   alpha <- dot$alpha; if (is.null(alpha)) alpha <- NA
 
-  img <- list(list(x = x, y = y, z = z, col = imgcol, col.full = col.full,
-    NAcol = NAcol, sl = sl, facets = facets, border = border, 
+  img <- list(list(x = x, y = y, z = z, col = imgcol,
+    NAcol = NAcol, breaks = breaks, sl = sl, facets = facets, border = border,
     lwd = lwd, lty = lty, alpha = alpha, mapped = FALSE))  
 
   poly <- list(img = img)
@@ -290,25 +299,31 @@ polyfill <- function(x, y, z, Col, NAcol, facets, border, sl,
 ## Same for 2D plots
 ## =============================================================================
 
-polyfill2D <- function(x, y, Col, facets, border, lwd, lty) {
+polyfill2D <- function(x, y, Col, facets, border, lwd, lty, Extend = TRUE) {
 
  # polygons are painted
-  ix <- rep(1:nrow(x), ncol(x))
-  iy <- as.vector(matrix(nrow = nrow(x), ncol = ncol(x),
-                  data = 1:ncol(x), byrow =TRUE))
-
-  xx <- extend(x)
-  yy <- extend(y)
+  if (Extend) {
+   nr <- nrow(x)
+   nc <- ncol(x)
+   x <- extend(x)
+   y <- extend(y)
+  } else {
+   nr <- nrow(x)-1
+   nc <- ncol(x)-1
+  }
+   ix <- rep(1:nr, nc)
+   iy <- as.vector(matrix(nrow = nr, ncol = nc,
+                   data = 1:nc, byrow =TRUE))
 
  # the polygons
-  PolyX <- rbind(xx[cbind(ix,     iy    )],
-                 xx[cbind(ix + 1, iy    )],
-                 xx[cbind(ix + 1, iy + 1)],
-                 xx[cbind(ix,     iy + 1)], NA)
-  PolyY <- rbind(yy[cbind(ix,     iy    )],
-                 yy[cbind(ix + 1, iy    )],
-                 yy[cbind(ix + 1, iy + 1)],
-                 yy[cbind(ix,     iy + 1)], NA)
+  PolyX <- rbind(x[cbind(ix,     iy    )],
+                 x[cbind(ix + 1, iy    )],
+                 x[cbind(ix + 1, iy + 1)],
+                 x[cbind(ix,     iy + 1)], NA)
+  PolyY <- rbind(y[cbind(ix,     iy    )],
+                 y[cbind(ix + 1, iy    )],
+                 y[cbind(ix + 1, iy + 1)],
+                 y[cbind(ix,     iy + 1)], NA)
 
 # The colors
   Col <- createcolors(facets, border, Col)

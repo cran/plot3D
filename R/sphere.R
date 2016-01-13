@@ -4,7 +4,8 @@
 
 spheresurf3D <- function(colvar = matrix(nrow = 50, ncol = 50, data = 1:50, byrow = TRUE),
      ..., phi = 0, theta = 0,
-     col = jet.col(100), NAcol = "white", border = NA, facets = TRUE,
+     col = NULL, NAcol = "white", breaks = NULL,
+     border = NA, facets = TRUE,
      contour = FALSE, colkey = NULL, resfac = 1,
      panel.first = NULL, clim = NULL, clab = NULL,
      bty = "n", lighting = FALSE, shade = NA, ltheta = -135, lphi = 0,
@@ -32,17 +33,22 @@ spheresurf3D <- function(colvar = matrix(nrow = 50, ncol = 50, data = 1:50, byro
   contour <- check.args(contour)
   
   cv <- colvar
-  cvlim <- clim
-  
+
   M <- mesh(X, Y)
   x <- with (M, -r*cos(x)*sin(y))
   y <- with (M, -r*sin(y)*sin(x))
   z <- with (M, -r*cos(y))
   
   dot <- splitdotpersp(list(...), bty, lighting, 
-    x, y, z, plist = plist, shade, lphi, ltheta)
+    x, y, z, plist = plist, shade, lphi, ltheta, breaks = breaks)
 
   DD <- dim(x)
+
+  if (is.null(col))
+    if (is.null(breaks))
+      col <- jet.col(100)
+    else
+      col <- jet.col(length(breaks)-1)
 
   CC <- check.colvar.persp(colvar, z, col, inttype, clim, dot$alpha)
   colvar <- CC$colvar
@@ -69,12 +75,14 @@ spheresurf3D <- function(colvar = matrix(nrow = 50, ncol = 50, data = 1:50, byro
             colkey = colkey, col = col), dot$persp))
     plist <- getplist()
   }  
+  breaks <- check.breaks(breaks, col)
+
   if (is.function(panel.first))
     panel.first(plist$mat)
 
   Poly <- paintit(colvar, x, y, z, plist, col, NAcol, clim, border,
           facets, dot$points$lwd, dot$points$lty, dot, Extend, !full, 
-          cv = cv, cvlim = cvlim)
+          breaks = breaks)
 
   if (contour$add) {
     contour$side <- NULL #"z"
@@ -118,7 +126,7 @@ spheresurf3D <- function(colvar = matrix(nrow = 50, ncol = 50, data = 1:50, byro
 
   if (iscolkey) 
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
-         dot$clog, type = "spheresurf3D")
+         dot$clog, type = "spheresurf3D", breaks = breaks)
 
   plist <- plot.struct.3D(plist, poly = Poly, segm = segm, plot = plot)  
 

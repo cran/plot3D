@@ -489,6 +489,78 @@ It is also possible to make a composite figure combining several functions.
 \label{fig:Composite}
 \end{figure}
 
+\section{Issues}
+\subsection{Specifying axes limits}
+There are two ways in which the axes limits can be set, either allowing the 3D data
+to overflow the axes, or to be clipped.
+Consider the following code, which is based on a demo from the \pkg{rgl} package \citep{rgl}.
+In this code, the \code{iris} data set is fitted with two models, and the 
+data plotted using \code{scatter3D} and the fitted surfaces using \code{persp3D}.
+
+The z-axis limits are set to \code{c(1, 9)}; plotting is postponed until all
+objects have been added (this avoids clogging - see next subsection).
+Then the result is plotted using \code{plotdev} (this plots the graph on any device
+that has been opened). The first time, without specifying the axes limits, the 
+second time setting the axes limits.
+<<label=Fit,include=FALSE>>=
+nout <- 30
+xout <-  with(iris, seq(min(Sepal.Length), max(Sepal.Length), length = nout))
+yout <-  with(iris, seq(min(Sepal.Width) , max(Sepal.Width),  length = nout))
+
+xy  <- expand.grid(Sepal.Length = xout, Sepal.Width = yout)
+
+# Fit two models, linear and quadratic
+mod   <- with(iris, lm(Petal.Length ~Sepal.Length  + Sepal.Width))
+mod2  <- with(iris, lm(Petal.Length ~Sepal.Length  + Sepal.Width +
+                       I(Sepal.Length^2) + I(Sepal.Width^2) +
+                       I(Sepal.Length*Sepal.Width)))
+# prodict at new values
+zpred.1 <- matrix(
+   predict(mod, newdata = xy), nrow = nout, ncol = nout)
+zpred.2 <- matrix(
+   predict(mod2, newdata = xy), nrow = nout, ncol = nout)
+
+# make graph, postpone plotting till the end
+par(mfrow = c(1, 2))
+
+with(iris,
+  scatter3D(Sepal.Length, Sepal.Width, Petal.Length,
+            colvar = as.numeric(Species), colkey = FALSE,
+            col = c("blue", "red", "gold"), bty = "b",
+            xlab = 'SL', ylab = 'PL', zlab = 'SW', zlim = c(1, 9),
+            pch = 16, cex = 2, theta = 0, plot = FALSE))
+
+persp3D(x = xout, y = yout, z = zpred.1, facets = NA,
+  add = TRUE, col = "blue", plot = FALSE)
+
+persp3D(x = xout, y = yout, z = zpred.2,
+  add = TRUE, col = "green", plot = FALSE)
+
+# plot using traditional device
+plotdev(theta = -50, alpha = 0.5)
+plotdev(theta = -50, alpha = 0.5, zlim = c(1, 9))
+
+# if you want to see this in rgl:
+# library(plot3Drgl)
+#plotrgl(alpha = 0.5)
+@
+\setkeys{Gin}{width=1.0\textwidth}
+\begin{figure}
+\begin{center}
+<<label=Fit,fig=TRUE,echo=FALSE, width = 10, height = 6, pdf = FALSE, png = TRUE>>=
+<<Fit>>
+@
+\end{center}
+\caption{calling plotdev() with axes limits causes the figure to be clipped}
+\label{fig:hyps}
+\end{figure}
+\subsection{Preventing clogging of the figures}
+When a lot of objects are \code{add}ed then the ultimate figure may appear clogged.
+This is because each time something is added, all the objects are redrawn on top of 
+what was already ther - the only thing that is not redrawn are the axes and titles.
+To create `slim' figures, use \code{plotdev()} (e.g. see previous section).
+
+
 \section{Finally}
 
 This vignette was made with Sweave \citep{Leisch02}.

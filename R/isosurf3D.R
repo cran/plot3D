@@ -15,7 +15,7 @@ isosurf3D <- function(x, y, z, colvar, ...,
   plist <- initplist(add)
 
   dot <- splitdotpersp(list(...), bty, lighting, 
-    shade = shade, ltheta = ltheta, lphi = lphi, x, y, z, plist = plist)
+    shade = shade, ltheta = ltheta, lphi = lphi, x, y, z, plist = plist, breaks = NULL)
 
   if (! ispresent(colvar))
     stop("'colvar' has to be defined and be an array of dimension 3")
@@ -102,7 +102,8 @@ isosurf3D <- function(x, y, z, colvar, ...,
     colkey$at <- 1:nlevel
     colkey$labels <- level
     zlim <- c(0.5, nlevel + 0.5)
-    plist <- plistcolkey(plist, colkey, col, zlim, clab, FALSE, type = "isosurf3D") 
+    plist <- plistcolkey(plist, colkey, col, zlim, clab, FALSE,
+      type = "isosurf3D", breaks = NULL)
   }
   plist <- plot.struct.3D(plist, poly = Poly, plot = plot)  
   
@@ -116,7 +117,7 @@ isosurf3D <- function(x, y, z, colvar, ...,
 
 triangle3D  <- function(tri, colvar = NULL, 
                     ..., phi = 40, theta = 40,
-                    col = NULL, NAcol = "white", 
+                    col = NULL, NAcol = "white", breaks = NULL,
                     border = NA, facets = TRUE,
                     colkey = NULL, panel.first = NULL,
                     lighting = FALSE, shade = 0.5, ltheta = -135, lphi = 0,
@@ -141,16 +142,23 @@ triangle3D  <- function(tri, colvar = NULL,
   z <- matrix(nrow = 3, data = tri[, 3])
   len <- ncol(x) # number of triangles
   
-  dot  <- splitdotpersp(list(...), bty, lighting, x, y, z, plist = plist, shade, lphi, ltheta)
+  dot  <- splitdotpersp(list(...), bty, lighting, x, y, z, plist = plist,
+    shade, lphi, ltheta, breaks = breaks)
 
   # colors
+
+
   if (ispresent(colvar)) { 
     if (length(colvar) != len)
       stop("'colvar' should have same length as number of triangles")
     
-    if (is.null(col))
+    if (is.null(col) & is.null(breaks))
       col <- jet.col(100)
-    
+    else if (is.null(col))
+      col <- jet.col(length(breaks)-1)
+
+    breaks <- check.breaks(breaks, col)
+
     if (length(col) == 1)
       col <- c(col, col)
 
@@ -168,7 +176,7 @@ triangle3D  <- function(tri, colvar = NULL,
      
     if (! is.null(dot$alpha)) 
       col <- setalpha(col, dot$alpha)
-    Col <- variablecol(colvar, col, NAcol, clim) 
+    Col <- variablecol(colvar, col, NAcol, clim, breaks)
 
   } else {
     if (is.null(col))
@@ -222,7 +230,7 @@ triangle3D  <- function(tri, colvar = NULL,
 
   if (iscolkey) 
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
-      dot$clog, type = "triangle3D") 
+      dot$clog, type = "triangle3D", breaks = breaks)
 
   plist <- plot.struct.3D(plist, poly = Poly, plot = plot)  
 

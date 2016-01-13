@@ -20,24 +20,23 @@
 
   \code{lines3D} is shorthand for \code{\link{scatter3D}(..., type = "l")}
 
-  \code{points2D} is shorthand for \code{\link{scatter2D}(..., type = "p")}
+  \code{points2D} is shorthand for \code{scatter2D(..., type = "p")}
 
-  \code{lines2D} is shorthand for \code{\link{scatter2D}(..., type = "l")}
+  \code{lines2D} is shorthand for \code{scatter2D(..., type = "l")}
 
-  The 2D functions \code{scatter2D} and \code{text2D} are included
-  for their side effect of having a color key.
+  The 2D functions are included for their side effect of having a color key.
 
 }
 \usage{
 scatter3D (x, y, z, ..., colvar = z, phi = 40, theta = 40,
-           col = NULL, NAcol = "white",  
+           col = NULL, NAcol = "white", breaks = NULL,
            colkey = NULL, panel.first = NULL, 
            clim = NULL, clab = NULL, 
            bty = "b", CI = NULL, surf = NULL, 
            add = FALSE, plot = TRUE)
           
-text3D (x, y, z, labels, ..., 
-        colvar = NULL, phi = 40, theta = 40, col = NULL, NAcol = "white",  
+text3D (x, y, z, labels, ..., colvar = NULL, phi = 40, theta = 40,
+        col = NULL, NAcol = "white",  breaks = NULL,
         colkey = NULL, panel.first = NULL, 
         clim = NULL, clab = NULL, 
         bty = "b", add = FALSE, plot = TRUE)
@@ -46,12 +45,17 @@ points3D (x, y, z, ...)
 
 lines3D (x, y, z, ...)
 
-scatter2D (x, y, ..., colvar = NULL, col = NULL, NAcol = "white", 
+scatter2D (x, y, ..., colvar = NULL,
+         col = NULL, NAcol = "white", breaks = NULL,
          colkey = NULL, clim = NULL, clab = NULL, 
          CI = NULL, add = FALSE, plot = TRUE)
 
+lines2D(x, y, ...)
+
+points2D(x, y, ...)
+
 text2D (x, y, labels, ..., colvar = NULL, 
-         col = NULL, NAcol = "white", colkey = NULL, 
+         col = NULL, NAcol = "white", breaks = NULL, colkey = NULL,
          clim = NULL, clab = NULL, add = FALSE, plot = TRUE) 
 }
 
@@ -74,7 +78,11 @@ text2D (x, y, labels, ..., colvar = NULL,
     }
   \item{NAcol }{Colors to be used for \code{colvar} values that are \code{NA}.
     }
-  \item{colkey }{A logical, \code{NULL} (default), or a \code{list} with parameters 
+  \item{breaks }{a set of finite numeric breakpoints for the colors;
+    must have one more breakpoint than color and be in increasing order.
+    Unsorted vectors will be sorted, with a warning.
+    }
+  \item{colkey }{A logical, \code{NULL} (default), or a \code{list} with parameters
     for the color key (legend). List parameters should be one of 
     \code{side, plot, length, width, dist, shift, addlines, col.clab, cex.clab,
       side.clab, line.clab, adj.clab, font.clab}
@@ -499,7 +507,7 @@ text2D (x, y, labels, ..., colvar = NULL,
  image2D(z = Oxsat$val[,,1], x = Oxsat$lon, y = Oxsat$lat,
        contour = TRUE, 
        xlab = "longitude", ylab = "latitude", 
-       main = "Oxygen saturation", zlim = oxlim, clab = "\%")
+       main = "Oxygen saturation", clim = oxlim, clab = "\%")
 
 # (imaginary) measurements at 5 sites
  lon   <- c( 11.2,   6.0, 0.9,  -4, -8.8)

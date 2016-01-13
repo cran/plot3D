@@ -22,7 +22,7 @@ contour2D (z, x = seq(0, 1, length.out = nrow(z)),
 
 \method{image2D}{matrix}(z, x = seq(0, 1, length.out = nrow(z)), 
                y = seq(0, 1, length.out = ncol(z)), colvar = z, ...,
-               col = jet.col(100), NAcol = "white", 
+               col = NULL, NAcol = "white", breaks = NULL,
                border = NA, facets = TRUE, contour = FALSE, 
                colkey = NULL, resfac = 1, clab = NULL, 
                lighting = FALSE, shade = NA, ltheta = -135, lphi = 0,
@@ -44,7 +44,7 @@ contour2D (z, x = seq(0, 1, length.out = nrow(z)),
      If a vector \code{x} should be of length equal to \code{nrow(z)} and 
      \code{y} should be of length equal to \code{ncol(z)}. 
      If a matrix (only for \code{image2D}), they should have
-     the same dimension as \code{z}.
+     the same dimension as \code{z} or be of dimension = \code{dim(z)+1}.
     }
   \item{colvar }{Only used when \code{shade} or \code{lighting} is toggled on.
     The variable used to color the image. 
@@ -55,7 +55,11 @@ contour2D (z, x = seq(0, 1, length.out = nrow(z)),
   \item{NAcol }{Color to be used for \code{NA} values of \code{z}; for \code{image2D}, the default is ``white'',
     for \code{contour2D}, the default is to do nothing. 
     }
-  \item{contour }{If \code{TRUE}, then a \link{contour} plot will be 
+  \item{breaks }{a set of finite numeric breakpoints for the colors;
+    must have one more breakpoint than color and be in increasing order.
+    Unsorted vectors will be sorted, with a warning.
+    }
+  \item{contour }{If \code{TRUE}, then a \link{contour} plot will be
     added to the image plot, unless \code{x, y} are a matrix. 
     Also allowed is to pass a \code{list} with arguments for the 
     \link{contour} function. 
@@ -256,8 +260,9 @@ contour2D (z, x = seq(0, 1, length.out = nrow(z)),
  image2D(volcano, x = 1:nr, y = 1:nc, contour = TRUE, shade = 0.5, lphi = 0,
        col = "lightblue", main = "volcano")
 
- image2D(volcano, x = 1:nr, y = 1:nc, col = jet.col(12),
-       main = "volcano", clab = "height, m")
+ breaks <- seq(90, 200, by = 10)
+ image2D(volcano, x = 1:nr, y = 1:nc, col = jet.col(length(breaks)-1),
+       main = "volcano", clab = "height, m", breaks = breaks)
 
 ## =======================================================================
 ## Contour plots
@@ -354,6 +359,20 @@ contour2D (z, x = seq(0, 1, length.out = nrow(z)),
         byrow = TRUE, data = seq(0., 25, length.out = 87)))
 
  image2D(volcano, x = volcx, y = volcy)
+
+# x and y can also be of dimension dim(z)+1:
+\dontrun{
+# tilted x- and y-coordinates of 'volcano'
+ volcx <- matrix(nrow = 88, ncol = 62, data = 1:88)
+ volcx <- volcx + matrix(nrow = 88, ncol = 62,
+        byrow = TRUE, data = seq(0., 15, length.out = 62))
+
+ volcy <- matrix(ncol = 88, nrow = 62, data = 1:62)
+ volcy <- t(volcy + matrix(ncol = 88, nrow = 62,
+        byrow = TRUE, data = seq(0., 25, length.out = 88)))
+
+ image2D(volcano, x = volcx, y = volcy)
+}
 
 # use of panel function
  image2D(volcano, x = volcx, y = volcy, NAcol = "black", 

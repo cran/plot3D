@@ -6,7 +6,7 @@ ribbon3D <- function(x = seq(0, 1, length.out = nrow(z)),
                    y = seq(0, 1, length.out = ncol(z)), 
                    z, ..., 
                    colvar = z, phi = 40, theta = 40,
-                   col = NULL,  NAcol = "white", 
+                   col = NULL,  NAcol = "white", breaks = NULL,
                    border = NA, facets = TRUE,
                    colkey = NULL, resfac = 1, 
                    image = FALSE, contour = FALSE, panel.first = NULL,
@@ -61,7 +61,7 @@ ribbon3D <- function(x = seq(0, 1, length.out = nrow(z)),
   }
 
   dot <- splitdotpersp(list(...), bty, lighting,
-    rx, ry, z, plist = plist, shade, lphi, ltheta)
+    rx, ry, z, plist = plist, shade, lphi, ltheta, breaks = breaks)
 
  # swap if decreasing
   if (! is.matrix(x) & all(diff(x) < 0)) {    
@@ -86,6 +86,12 @@ ribbon3D <- function(x = seq(0, 1, length.out = nrow(z)),
   if (contour$add) 
     cv <- colvar
 
+  if (is.null(col) & is.null(breaks))
+   col <- jet.col(100)
+  else if (is.null(col))
+   col <- jet.col(length(breaks)-1)
+
+  breaks <- check.breaks(breaks,col)
   CC <- check.colvar.2(colvar, z, col, clim, dot$alpha)
   colvar <- CC$colvar
   col <- CC$col
@@ -150,17 +156,18 @@ ribbon3D <- function(x = seq(0, 1, length.out = nrow(z)),
       ind <- length(Poly$col) + 1
       Y  <- cbind(rep(y[i]+dY[i+1], Nx), rep(y[i]-dY[i], Nx))  
       Poly <- add.poly(Poly, X, Y,  cbind(z[,i], z[,i]), 
-                       colvar[,i], col, NAcol, clim, facets, border)
+                       colvar[,i], col, NAcol, breaks,
+                       clim, facets, border)
       if (curtain) {
         Poly <- add.poly(Poly, X, 
           cbind(rep(y[i]-dY[i], Nx), rep(y[i]-dY[i], Nx)),  
           cbind(rep(zmin, Nx), z[,i]), colvar[,i], 
-          col, NAcol, clim, facets, border)
+          col, NAcol, breaks, clim, facets, border)
 
         Poly <- add.poly(Poly, X, 
           cbind(rep(y[i]+dY[i+1], Nx), rep(y[i]+dY[i+1], Nx)),  
           cbind(rep(zmin, Nx), z[,i]), colvar[,i], 
-          col, NAcol, clim, facets, border)
+          col, NAcol, breaks, clim, facets, border)
 
         ye1 <- y[i]-dY[i]
         ye2 <- y[i]+dY[i+1]
@@ -193,17 +200,18 @@ ribbon3D <- function(x = seq(0, 1, length.out = nrow(z)),
       ind <- length(Poly$col) + 1
       X  <- cbind(rep(x[i]+dX[i+1], Ny), rep(x[i]-dX[i], Ny))  
       Poly <- add.poly(Poly, X, Y,  cbind(z[i,], z[i,]), 
-                       colvar[i,], col, NAcol, clim, facets, border)
+                       colvar[i,], col, NAcol, breaks,
+                       clim, facets, border)
       if (curtain) { 
         Poly <- add.poly(Poly, 
           cbind(rep(x[i]-dX[i], Ny), rep(x[i]-dX[i], Ny)), Y, 
           cbind(rep(zmin, Ny), z[i,]), colvar[i,], 
-          col, NAcol, clim, facets, border)
+          col, NAcol, breaks, clim, facets, border)
 
         Poly <- add.poly(Poly,  
           cbind(rep(x[i]+dX[i+1], Ny), rep(x[i]+dX[i+1], Ny)), Y,
           cbind(rep(zmin, Ny), z[i,]), colvar[i,], 
-          col, NAcol, clim, facets, border)
+          col, NAcol, breaks, clim, facets, border)
       
         xe1 <- x[i]-dX[i]
         xe2 <- x[i]+dX[i+1]
@@ -244,7 +252,7 @@ ribbon3D <- function(x = seq(0, 1, length.out = nrow(z)),
   class(Poly)  <- "poly"
 
   if (image$add) 
-    Poly <- XYimage (Poly, image, x, y, z, plist, col) 
+    Poly <- XYimage (Poly, image, x, y, z, plist, col, breaks = breaks)
 
   if (contour$add) 
     segm <- contourfunc(contour, x, y, z, plist, cv, clim)
@@ -253,7 +261,7 @@ ribbon3D <- function(x = seq(0, 1, length.out = nrow(z)),
 
   if (iscolkey) 
     plist <- plistcolkey(plist, colkey, col, clim, clab, dot$clog, 
-      type = "ribbon3D") 
+      type = "ribbon3D", breaks = breaks)
    
   plist <- plot.struct.3D(plist, poly = Poly, segm = segm, plot = plot)  
 

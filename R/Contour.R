@@ -16,6 +16,7 @@ contour2D <- function (z, x = seq(0, 1, length.out = nrow(z)),
                     col = col, NAcol = NAcol, 
                     colkey = colkey, resfac = resfac,
                     clab = clab, ...)
+
   setplist(plist)
  # log transformation of z-values (log = "c", or log = "z")
   zlog <- FALSE

@@ -18,7 +18,7 @@ points2D <- function(x, y,  ...) {
 ## =============================================================================
 
 scatter2D <- function(x, y, ..., colvar = NULL, 
-                    col = NULL, NAcol = "white", 
+                    col = NULL, NAcol = "white", breaks = NULL,
                     colkey = NULL, 
                     clim = NULL, clab = NULL, CI = NULL, 
                     add = FALSE, plot = TRUE) {
@@ -26,7 +26,7 @@ scatter2D <- function(x, y, ..., colvar = NULL,
   plist <- initplist(add)
 
   plist <- add2Dplist(plist, "scatter", x = x, y = y, colvar = colvar, 
-                    col = col, NAcol = NAcol, 
+                    col = col, NAcol = NAcol, breaks = breaks,
                     colkey = colkey, 
                     clim = clim, clab = clab, CI = CI, ...)
   setplist(plist)
@@ -37,10 +37,15 @@ scatter2D <- function(x, y, ..., colvar = NULL,
   isCI <- is.list(CI)
   if (isCI) 
     CI <- check.CI(CI, length(x), 2)
+
+
+  if (is.null(col) & is.null(breaks))
+     col <- jet.col(100)
+   else if (is.null(col))
+     col <- jet.col(length(breaks)-1)
+  breaks <- check.breaks(breaks, col)
   
   if (! is.null(colvar)) {
-    if (is.null(col))
-      col <- jet.col(100)
 
     if (dots$clog) {
       colvar <- log(colvar)
@@ -54,6 +59,7 @@ scatter2D <- function(x, y, ..., colvar = NULL,
       if (! add)       
         plist$plt$main <- colkey$parplt
       setplist(plist)    
+      colkey$breaks <- breaks
     }  
 
     if (length(colvar) != length(x)) 
@@ -65,7 +71,7 @@ scatter2D <- function(x, y, ..., colvar = NULL,
     if (! is.null(dots$alpha)) 
       col <- setalpha(col, dots$alpha)
     
-    Col <- variablecol(colvar, col, NAcol, clim) 
+    Col <- variablecol(colvar, col, NAcol, clim, breaks)
 
   } else  {  # no colvar
     Col <- col
