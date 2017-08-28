@@ -11,7 +11,7 @@ hist3D <- function(x = seq(0, 1, length.out = nrow(z)),
                    image = FALSE, contour = FALSE, panel.first = NULL,
                    clim = NULL, clab = NULL, bty = "b",
                    lighting = FALSE, shade = NA, ltheta = -135, lphi = 0,
-                   space = 0, opaque.top = FALSE,
+                   space = 0, opaque.top = FALSE, zmin = NULL, 
                    add = FALSE, plot = TRUE) {
 
   if (! is.matrix(z))
@@ -213,7 +213,9 @@ hist3D <- function(x = seq(0, 1, length.out = nrow(z)),
   dy <- diff(yy)*space[2]
 
  # basal and top points of the column; x and y positions
-  z.k    <- rep(min(dot$persp$zlim), length(z))
+  if (is.null(zmin))
+    zmin <- min(dot$persp$zlim) 
+  z.k    <- rep(zmin, length(z))
   z.kp1  <- as.vector(z)
   x.i    <- xx[ix  ]+dx[ix]
   x.ip1  <- xx[ix+1]-dx[ix]
@@ -276,6 +278,16 @@ hist3D <- function(x = seq(0, 1, length.out = nrow(z)),
        BORD <- facetcols.shadelight (light, Normals, BORD, dot$shade)
   }
 
+  if (any(is.na(PolyZ))) {   # Karline added this 27-01-2016
+  ii <- 1:ncol(PolyZ)
+    i1 <- apply(PolyZ[1:4,], MARGIN = 2, FUN = function(x) any(is.na(x)))
+    ii <- ii[!i1]
+    PolyX <- PolyX[,ii]
+    PolyY <- PolyY[,ii]
+    PolyZ <- PolyZ[,ii]
+    BORD <- BORD[ii]
+    COL <- COL[ii]
+  }
   PolyX <- rbind(PolyX, NA)   
   PolyY <- rbind(PolyY, NA)   
   PolyZ <- rbind(PolyZ, NA)   

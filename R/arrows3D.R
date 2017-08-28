@@ -184,6 +184,11 @@ Arrow <- function (x0, y0, x1, y1, length = 0.4, angle = 30,
   angle[x1 < x0] <- 180 + angle[x1 < x0]
   xx <- x1
   yy <- y1
+  if (sy < 0 & sx < 0) 
+    angle <- angle + 180
+  else if (sx < 0) 
+    angle <- angle + 180
+
   if (length(code) > 1) {
     code <- rep(code, length.out = length(xx)) 
     ii <- which (code %in% c(2, 3)) 

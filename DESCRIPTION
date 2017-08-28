@@ -1,5 +1,5 @@
 Package: plot3D
-Version: 1.1
+Version: 1.1.1
 Title: Plotting Multi-Dimensional Data
 Author: Karline Soetaert <karline.soetaert@nioz.nl>
 Maintainer: Karline Soetaert <karline.soetaert@nioz.nl>
@@ -10,8 +10,8 @@ License: GPL (>= 3.0)
 LazyData: yes
 Repository: CRAN
 Repository/R-Forge/Project: plot3d
-Repository/R-Forge/Revision: 109
-Repository/R-Forge/DateTimeStamp: 2016-01-11 13:35:24
-Date/Publication: 2016-01-13 13:54:11
+Repository/R-Forge/Revision: 120
+Repository/R-Forge/DateTimeStamp: 2017-08-17 08:40:10
+Date/Publication: 2017-08-28 11:39:29 UTC
 NeedsCompilation: no
-Packaged: 2016-01-11 13:45:53 UTC; rforge
+Packaged: 2017-08-17 08:45:32 UTC; rforge
