@@ -91,7 +91,7 @@ addimg <- function(poly, x, y, z, colvar = z, plist,
                  lwd = NULL, lty = NULL, proj = NULL, isimg = NULL,
                  img = list())                    
 
-  else if (class(poly) != "poly")
+  else if (!inherits(poly, "poly"))
     stop ("'poly' not of correct type for addimg")
 
   dot <- splitdotpersp(list(), 
@@ -251,7 +251,7 @@ addlines <- function(segm, x, y, z, plist,
                  y.from = NULL, y.to = NULL, 
                  z.from = NULL, z.to = NULL,
                  col = NULL, lwd = NULL, lty = NULL, proj = NULL)                    
-  else if (class(segm) != "segments")
+  else if (! inherits(segm, "segments"))
     stop ("'segm' not of correct type, 'segments', for addlines")
                              
   dot <- splitdotpersp(list(), 

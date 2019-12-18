@@ -576,9 +576,8 @@ image2D.list <- function (z, ...) {
     image2D.matrix(z = z$z, x = z$x, y = z$y, ...)
   } else {
     nz     <- length(z)
-    classz <- class(z[[1]])
-
-    if (! classz %in% c("matrix", "array"))
+    
+    if (!inherits(z[[1]], c("matrix", "array")))
       stop ("'z' should be a list with either matrices or arrays")
     
     DD <- dim(z[[1]])
@@ -590,7 +589,7 @@ image2D.list <- function (z, ...) {
         stop("elements of 'z' should have the same dimension, check element", i)
   
 # Set the mfrow argument - different from the usual
-    if ("matrix" %in% classz)  {
+    if (inherits(z[[1]], "matrix")) {
       nc <- min(ceiling(sqrt(nz)), 3)
       nr <- min(ceiling(nz/nc), 3)
     } else { # differs from default in that it is not limited to 3
@@ -627,7 +626,7 @@ image2D.list <- function (z, ...) {
     }
 
  # Display the images
-    if ("matrix" %in% classz)  {
+    if (inherits(z[[1]], "matrix")) {
      # outer margin text
       Mtext <- Ldots$mtext
       Ldots$mtext <- NULL

@@ -1,7 +1,7 @@
-0ac5ab74390a426a978a7f63c850d113 *DESCRIPTION
-586763054dfcab9509d0ce35db56ee81 *NAMESPACE
+0bf03a812343a551eefd004fe825ab38 *DESCRIPTION
+770350ada846894bdc7a5e131cd49833 *NAMESPACE
 0a80a44e0f2528ebde34c6d9cd1f87b0 *R/Contour.R
-8f80d82f392d9529159beacbf460412a *R/Image.R
+fe9eedbf8a372f99ad0ba76a5683b31a *R/Image.R
 f80617020bb2fe60b394e072bd8bad33 *R/ImageOcean.R
 e019961c83da53f12d0f0e77ea0b3dc8 *R/aaa.R
 1609e15637e70f852f05f8d4e783151c *R/arrows3D.R
@@ -21,7 +21,7 @@ cbee792bc4a94cb459e8b812eb785aa2 *R/paintit.R
 d0864d4e6b5e9070bd76471e0e73aa22 *R/perspbox.R
 3929edff71e9e35417386c0c808777d9 *R/plot.struct.R
 641122ac3447f9dd7b867aaf1d26baf0 *R/plot2D.R
-6fbe2ea14706c3a135fff39d3754bc89 *R/poly3D.R
+6f3733892863c04293336178a328cae6 *R/poly3D.R
 6a642725df6922e58f247037e4c90312 *R/polygon3D.R
 c1c646ebe1d9e6aca71d5d0794dd2333 *R/ribbon3D.R
 e6fd552fcc3e5ab1011b90e0cd754b5e *R/scatter.R
@@ -34,9 +34,9 @@ a2e0dec9476132b7bd6d8a354c59afbf *R/sphere.R
 9445f839f15dba7508b4dbd3e5519610 *R/surf3D.R
 e2d77258cec95d9bdc1e228cfa42c4e3 *R/text3D.R
 2263e46b1476561ac00e4008c6f5efd6 *R/voxel3D.R
-56b7f2ad8d7d7443efb90fc07040ffe1 *build/vignette.rds
-bf165165bc82ebbb50564883b263db6d *data/Hypsometry.rda
-421cd1ef1ef7d260f4d923e763be5b63 *data/Oxsat.rda
+71c583ab30c4426dbaa5745d4e152b0c *build/vignette.rds
+cc3bdbef36f91945a9d8bf075c47ebf7 *data/Hypsometry.rda
+55e5584980a8e675f0e57e418901a74a *data/Oxsat.rda
 0d68d3e982e656b454d3fa3f6153d847 *data/datalist
 be0f7431333885953c406f8f08c5fc3f *inst/doc/plot3D.R
 59a1965128f6d3b2e161c39b9b797abe *inst/doc/plot3D.pdf
