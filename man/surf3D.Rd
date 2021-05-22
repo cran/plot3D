@@ -313,7 +313,7 @@ This means that the x- y- and z- axes range from [-1, 1].
  spheresurf3D(colkey = FALSE, xlim = lim, ylim = lim, zlim = lim)
 
  spheresurf3D(bty = "b", ticktype = "detailed", phi = 50)
- spheresurf3D(colvar = matrix(nrow = 30, data = runif(900)))
+ spheresurf3D(colvar = matrix(nrow = 30, ncol = 30, data = runif(900)))
  
 ## =======================================================================
 ## Images on a sphere

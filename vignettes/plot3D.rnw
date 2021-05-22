@@ -2,8 +2,6 @@
 \DeclareGraphicsExtensions{.pdf,.eps,.png}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Add-on packages and fonts
-\usepackage{graphicx}
-\usepackage{amsmath}
 
 
 \newcommand{\noun}[1]{\textsc{#1}}
@@ -169,6 +167,7 @@ To run all examples:
  example(plot.plist)
  example(ImageOcean)
  example(Oxsat)
+ example(legendplot)
 \end{verbatim}
 
 \section{Functions image2D and persp3D}
@@ -236,6 +235,7 @@ persp3D(z = Hypsometry$z[ii,jj], xlab = "longitude", bty = "bl2",
 \label{fig:ocean2}
 \end{figure}
 
+\newpage
 \section{slices and isosurfaces}
 Function \code{slice3D} draws slices from volumetric (3D) data, 
 function \code{isosurf3D} creates and plots isosurfaces. 
@@ -275,6 +275,7 @@ isosurf3D(x, y, z, colvar = p, level = 0, col = "red")
 \label{fig:slice}
 \end{figure}
 
+\newpage
 \section{surf3D}
 Function \code{surf3D} creates 3-D surface plots.
 <<>>=
@@ -388,6 +389,7 @@ par(mfrow = c(1, 1))
 \label{fig:scatter}
 \end{figure}
 
+\newpage
 \subsection{arrows3D, arrows2D}
 Functions \code{arrows2D} and \code{arrows3D} extend R function \code{arrows} with
 a color variable.
@@ -412,7 +414,7 @@ arrows3D(x0 = runif(10), y0 = runif(10), z0 = runif(10),
 \label{fig:arrows}
 \end{figure}
 
-
+\newpage
 \section{Functions based on image}
 The \code{image2D} function is an extended version of \code{image}.
 It has two S3 methods:
@@ -457,6 +459,7 @@ colkey(clim = c(0, 115), clab = c("O2 saturation", "percent"))
 \label{fig:image2D}
 \end{figure}
 
+\newpage
 \section{Composite figures}
 It is also possible to make a composite figure combining several functions.
 <<label=Composite,include=FALSE>>=
@@ -489,6 +492,61 @@ It is also possible to make a composite figure combining several functions.
 \label{fig:Composite}
 \end{figure}
 
+\newpage
+\section{plotting with legends and colorkeys}
+As from version 1.4, a new feature has been added, allowing plotting functions to have colorkeys, or legends that are positioned outside of the plotting region.
+See ?legendplot. 
+
+For instance, to put a legend outside of a boxplot:
+
+<<label=legendboxplot,include=FALSE>>=
+pm <- par(mar = c(4,3,4,2))
+
+legend.plt(formula = len ~ dose:supp, data = ToothGrowth,
+          boxwex = 0.5, col = c("orange", "yellow"),
+          main = "Guinea Pigs' Tooth Growth",
+          xlab = "Vitamin C dose mg", ylab = "tooth length",
+          sep = ":", lex.order = TRUE, ylim = c(0, 35), yaxs = "i", 
+          method = "boxplot", legend.side = 2, 
+          legend = list(legend = c("Ascorbic acid", "Orange juice"),
+                          fill = c("yellow", "orange")))
+@
+
+\setkeys{Gin}{width=0.8\textwidth}
+\begin{figure}
+\begin{center}
+<<label=legendboxplot,fig=TRUE,echo=FALSE, pdf = FALSE, png = TRUE>>=
+<<legendboxplot>>
+@
+\end{center}
+\caption{adding a legend to boxplot}
+\label{fig:legendboxplot}
+\end{figure}
+
+\newpage
+To add a colorkey 
+
+<<label=colorkeypie,include=FALSE>>=
+n <- 100
+colorkey.plt(method = "pie", x = rep(1, n), labels = "", 
+             col = rainbow(n), border = NA,
+             main = "colorkeyplot with 'pie'", 
+             colorkey = list(col = rainbow(n), clim = c(1,n)))
+@
+
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{figure}
+\begin{center}
+<<label=colorkeypie,fig=TRUE,echo=FALSE, pdf = FALSE, png = TRUE>>=
+<<colorkeypie>>
+@
+\end{center}
+\caption{adding a colorkey}
+\label{fig:colorkeypie}
+\end{figure}
+
+
+\newpage
 \section{Issues}
 \subsection{Specifying axes limits}
 There are two ways in which the axes limits can be set, either allowing the 3D data
@@ -557,8 +615,9 @@ plotdev(theta = -50, alpha = 0.5, zlim = c(1, 9))
 \subsection{Preventing clogging of the figures}
 When a lot of objects are \code{add}ed then the ultimate figure may appear clogged.
 This is because each time something is added, all the objects are redrawn on top of 
-what was already ther - the only thing that is not redrawn are the axes and titles.
+what was already there - the only thing that is not redrawn are the axes and titles.
 To create `slim' figures, use \code{plotdev()} (e.g. see previous section).
+
 
 
 \section{Finally}

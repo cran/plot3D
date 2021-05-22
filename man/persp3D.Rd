@@ -366,7 +366,7 @@ The New S Language. Wadsworth & Brooks/Cole.
 
  x <- y <- seq(0, 2*pi, length.out = 10)
  z <- with (mesh(x, y), cos(x) *sin(y)) + runif(100)
- cv <- matrix(nrow = 10, 0.5*runif(100))
+ cv <- matrix(nrow = 10, ncol = 10, 0.5*runif(100))
  persp3D(x, y, z, colvar = cv)              # takes averages of z
  persp3D(x, y, z, colvar = cv, inttype = 2) # takes averages of colvar
 
@@ -434,13 +434,13 @@ The New S Language. Wadsworth & Brooks/Cole.
 #  persp3D(z = volcano, col = "grey", shade = 0.3)
 
 # tilted x- and y-coordinates of 'volcano'
- volcx <- matrix(nrow = 87, ncol = 61, data = 1:87)
- volcx <- volcx + matrix(nrow = 87, ncol = 61, 
-        byrow = TRUE, data = seq(0., 15, length.out = 61))
+ volcx <- matrix(nrow = 87, ncol = 61, data = rep(1:87, times=61))
+ volcx <- volcx + matrix(nrow = 87, ncol = 61, byrow = TRUE, 
+        data = rep(seq(0., 15, length.out=61), times=87))
 
- volcy <- matrix(ncol = 87, nrow = 61, data = 1:61)
- volcy <- t(volcy + matrix(ncol = 87, nrow = 61, 
-        byrow = TRUE, data = seq(0., 15, length.out = 87)))
+ volcy <- matrix(ncol = 87, nrow = 61, data = rep(1:61, times=87))
+ volcy <- t(volcy + matrix(ncol = 87, nrow = 61, byrow = TRUE, 
+        data = rep(seq(0., 15, length.out=87), times=61)))
 
  persp3D(volcano, x = volcx, y = volcy, phi = 80)
     

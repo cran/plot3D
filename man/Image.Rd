@@ -235,7 +235,7 @@ contour2D (z, x = seq(0, 1, length.out = nrow(z)),
  z <- matrix (nrow = 3, ncol = 3, data = 1:9)
  image2D(z, x, y, border = "black")
  image2D(z, x, y, rasterImage = TRUE, border = "black")
- image2D(z, x = matrix(nrow = 3, ncol = 3, data = x), 
+ image2D(z, x = matrix(nrow = 3, ncol = 3, data = rep(x, times = 3)), 
        y, border = "black")
  image2D(z, x, y, border = "black", theta = 45)
 
@@ -350,26 +350,26 @@ contour2D (z, x = seq(0, 1, length.out = nrow(z)),
  par(mfrow = c(2, 1))
 
 # tilted x- and y-coordinates of 'volcano'
- volcx <- matrix(nrow = 87, ncol = 61, data = 1:87)
- volcx <- volcx + matrix(nrow = 87, ncol = 61, 
-        byrow = TRUE, data = seq(0., 15, length.out = 61))
+ volcx <- matrix(nrow = 87, ncol = 61, data = rep(1:87, times=61))
+ volcx <- volcx + matrix(nrow = 87, ncol = 61, byrow = TRUE, 
+        data = rep(seq(0., 15, length.out=61), times=87))
 
- volcy <- matrix(ncol = 87, nrow = 61, data = 1:61)
- volcy <- t(volcy + matrix(ncol = 87, nrow = 61, 
-        byrow = TRUE, data = seq(0., 25, length.out = 87)))
+ volcy <- matrix(ncol = 87, nrow = 61, data = rep(1:61, times=87))
+ volcy <- t(volcy + matrix(ncol = 87, nrow = 61, byrow = TRUE, 
+        data = rep(seq(0., 25, length.out=87), times=61)))
 
  image2D(volcano, x = volcx, y = volcy)
 
 # x and y can also be of dimension dim(z)+1:
 \dontrun{
 # tilted x- and y-coordinates of 'volcano'
- volcx <- matrix(nrow = 88, ncol = 62, data = 1:88)
- volcx <- volcx + matrix(nrow = 88, ncol = 62,
-        byrow = TRUE, data = seq(0., 15, length.out = 62))
+ volcx <- matrix(nrow = 88, ncol = 62, data = rep(1:88, times=62))
+ volcx <- volcx + matrix(nrow = 88, ncol = 62, byrow = TRUE, 
+        data = rep(seq(0., 15, length.out=62), times=88))
 
- volcy <- matrix(ncol = 88, nrow = 62, data = 1:62)
- volcy <- t(volcy + matrix(ncol = 88, nrow = 62,
-        byrow = TRUE, data = seq(0., 25, length.out = 88)))
+ volcy <- matrix(ncol = 88, nrow = 62, data = rep(1:62, times=88))
+ volcy <- t(volcy + matrix(ncol = 88, nrow = 62, byrow = TRUE, 
+        data = rep(seq(0., 25, length.out=88), times=62)))
 
  image2D(volcano, x = volcx, y = volcy)
 }

@@ -20,3 +20,7 @@ export(text3D, voxel3D, isosurf3D, createvoxel, createisosurf)
 export(arrows2D, segments2D, rect2D, polygon2D)
 
 export(getplist, setplist, plotdev, selectplist)
+export(createKey, legend.plt, legend.oma, colorkey.plt, colorkey.oma, 
+       legendplot, legendmatplot, legendhist, legendpairs,
+       colorkeyplot, colorkeymatplot, colorkeyhist, colorkeypairs)
+	   

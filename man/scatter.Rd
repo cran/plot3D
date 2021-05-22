@@ -263,8 +263,8 @@ text2D (x, y, labels, ..., colvar = NULL,
  z <- runif(20)
 
  par(mfrow = c(1, 1))
- CI <- list(z = matrix(nrow = length(x),
-                       data = rep(0.05, 2*length(x))))
+ CI <- list(z = matrix(nrow = length(x), ncol = 2,
+                       data = rep(0.05, times = 2*length(x))))
 
 # greyish background for the boxtype (bty = "g")
  scatter3D(x, y, z, phi = 0, bty = "g", CI = CI,
@@ -276,9 +276,9 @@ text2D (x, y, labels, ..., colvar = NULL,
  y <- runif(20)
  z <- runif(20)
 
- CI2 <- list(x = matrix(nrow = length(x),
+ CI2 <- list(x = matrix(nrow = length(x), ncol = 2,
                        data = rep(0.05, 2*length(x))),
-             z = matrix(nrow = length(x),
+             z = matrix(nrow = length(x), ncol = 2,
                        data = rep(0.05, 2*length(x))))
 
  scatter3D(x, y, z, CI = CI2, add = TRUE, col = "red", pch = 16)
@@ -347,7 +347,7 @@ text2D (x, y, labels, ..., colvar = NULL,
 
    mpg.pred <- matrix (nrow = 30, ncol = 30, 
       data = predict(fit, newdata = data.frame(xy), 
-      interval = "prediction"))
+      interval = "prediction")[,1])
 
 # fitted points for droplines to surface
    fitpoints <- predict(fit) 
@@ -484,11 +484,11 @@ text2D (x, y, labels, ..., colvar = NULL,
  cv <- sqrt(x^2 + y^2)
 
  CI <- list(lwd = 2)
- CI$x <- matrix (nrow = length(x), data = c(rep(0.25, 2*length(x))))
+ CI$x <- matrix (nrow = length(x), ncol = 2, data = rep(0.25, 2*length(x)))
  scatter2D(x, y, colvar = cv, pch = 16, cex = 2, CI = CI)
  scatter2D(x, y, colvar = cv, pch = 16, cex = 2, CI = CI, type = "b")
 
- CI$y <- matrix (nrow = length(x), data = c(rep(0.05, 2*length(x))))
+ CI$y <- matrix (nrow = length(x), ncol = 2, data = rep(0.05, 2*length(x)))
  CI$col <- "black"
  scatter2D(x, y, colvar = cv, pch = 16, cex = 2, CI = CI)
 

@@ -2,8 +2,8 @@
 \DeclareGraphicsExtensions{.pdf,.eps,.png}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Add-on packages and fonts
-\usepackage{graphicx}
-\usepackage{amsmath}
+%%\usepackage{graphicx}
+%%\usepackage{amsmath}
 
 
 \newcommand{\noun}[1]{\textsc{#1}}

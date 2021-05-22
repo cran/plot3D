@@ -90,10 +90,10 @@ data(Oxsat)
 }
 
 \references{
-  \url{http://www.nodc.noaa.gov}
+  \url{https://www.nodc.noaa.gov}
 
-  \code{ftp://ftp.nodc.noaa.gov/pub/data.nodc/woa/WOA05nc/seasonal/}
-  
+  \url{https://www.nodc.noaa.gov/OC5/WOA05/woa05nc.html} 
+   
   Originally made available by CSIRO:
   
   Mark A. Collier and Paul J. Durack, 2005. CSIRO netCDF version of the

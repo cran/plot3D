@@ -435,7 +435,7 @@ Computer Graphics, Vol. 21, No. 4, pp 163-169 (Proc. of SIGGRAPH), 1987.
 
 Dai Feng, Luke Tierney, Computing and Displaying Isosurfaces in R, 
 Journal of Statistical Software 28(1), 2008.
-URL \url{http://www.jstatsoft.org/v28/i01/}.
+URL \url{https://www.jstatsoft.org/v28/i01/}.
 }
 
 \keyword{ hplot }
