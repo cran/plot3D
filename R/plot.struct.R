@@ -45,7 +45,7 @@ plot.plist <- function(x, ...)  {
   }     
   
   x$persp$box <- FALSE
-  x <- plot.struct.3D (x, plot = TRUE)
+  x <- plot_struct_3D (x, plot = TRUE)
 
   if (x$type == "23D") {
     x <- plot2Dplist(x, ...)
@@ -57,7 +57,7 @@ plot.plist <- function(x, ...)  {
 
 ## =============================================================================
 
-plot.struct.3D <- function(plist, pt = NULL, CIpt = NULL, poly = NULL, 
+plot_struct_3D <- function(plist, pt = NULL, CIpt = NULL, poly = NULL, 
   segm = NULL, labels = NULL, arr = NULL, other = NULL, plot = TRUE) {       
 
   if (plot) {
@@ -71,7 +71,7 @@ plot.struct.3D <- function(plist, pt = NULL, CIpt = NULL, poly = NULL,
       plist <- plotbox(plist)
   }
   
-  plist <- update.3D(plist, pt, CIpt, poly, segm, labels, arr, other, 
+  plist <- update_3D(plist, pt, CIpt, poly, segm, labels, arr, other, 
     expand = plot)
 
   if (plot) {
@@ -273,7 +273,7 @@ proj3D <- function(plist, dot) {
 ## updates plist
 ## =============================================================================
 
-update.3D <- function(plist, pt = NULL, CIpt = NULL, poly = NULL, 
+update_3D <- function(plist, pt = NULL, CIpt = NULL, poly = NULL, 
        segm = NULL, labels = NULL, arr = NULL, other = NULL, expand = TRUE) {       
 # ------------------------------------------------------------------------------
 # update plist with new elements     

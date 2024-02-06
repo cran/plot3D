@@ -109,7 +109,7 @@ scatter2D <- function(x, y, ..., colvar = NULL,
     add <- TRUE
 
     if (isCI) {
-      plot.CI.2d(CI, x, y, Col) 
+      plot_CI_2d(CI, x, y, Col) 
       isCI <- FALSE
     }
     
@@ -124,14 +124,14 @@ scatter2D <- function(x, y, ..., colvar = NULL,
     dots$main <- start2Dplot(dots$main, x, y)
     
     if (isCI) {
-      plot.CI.2d(CI, x, y, Col)   
+      plot_CI_2d(CI, x, y, Col)   
       isCI <- FALSE
     }
     do.call("points", c(alist(x, y, col = Col), dots$points))
   } else  {
     
     if (isCI) {
-      plot.CI.2d(CI, x, y, Col) 
+      plot_CI_2d(CI, x, y, Col) 
       isCI <- FALSE
     }
     do.call("points", c(alist(x, y, col = Col), dots$points))
@@ -200,7 +200,7 @@ check.CI <- function(CI, len, dim) {
 ## CI in 2-d
 ## =============================================================================
 
-plot.CI.2d <- function(CI, x, y, Col) {         # very-very simple
+plot_CI_2d <- function(CI, x, y, Col) {         # very-very simple
 
   CIpar <- CI[c("lty", "lwd", "col")]
 

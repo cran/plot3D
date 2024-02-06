@@ -24,10 +24,8 @@ trans3D (x, y, z, pmat)
 \value{
   A list with two components:
   
-  \itemize{
     \item{x, y }{the projected 2-D coordinates of the 3-D input \code{x, y, z}}
-  }
-  
+
   In contrast to \link{trans3d}, \code{trans3D} the returned values x and y 
   will be of the same class and dimensions as the input x and y.
   If inputted \code{x, y, z} are matrices or arrays, so will the projected

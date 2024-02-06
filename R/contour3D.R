@@ -191,7 +191,7 @@ contour3D <- function(x = NULL, y = NULL, z = NULL, ...,
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
       dot$clog, type = "contour3D", breaks = NULL)
   }
-  plist <- plot.struct.3D(plist, segm = segm, plot = plot)  
+  plist <- plot_struct_3D(plist, segm = segm, plot = plot)  
 
   setplist(plist)   
   invisible(plist$mat)

@@ -95,7 +95,7 @@ createKey (x, clim = NULL, col = NULL, NAcol = "black")
  The legend plotting functions return as \code{invisible}, a \code{list} that contains the plotting parameters for the regions of the legend and of the main plotting region, elements called \code{plt.legend} and \code{plt.main}. For the \code{pairs} method, the list returned contains the size of the outer margin  instead, i.e. the \code{oma} parameter. 
 }
 
-\note{The method that changes the oma parameter (based on legend.oma or colorkey.oma) is not optimal, as plot.new is called several times in this function. This means you will need to "hit return to see next plot" several times before you see the actual figure.  
+\note{The method that changes the oma parameter (based on legend.oma) is not optimal, as plot.new is called several times. This means you will need to "hit return to see next plot" several times before you see the actual figure.  
 }
 \examples{
 
@@ -256,7 +256,7 @@ plot.new()
 legend("left", legend = "another legend")
 
 ## =============================================================================
-## Pairs - note: this is not optimal 
+## Pairs
 ## =============================================================================
 
 legendpairs(iris, legend = list(legend = levels(iris$Species), cex = 0.5, col = 1:3, pch = 1), 

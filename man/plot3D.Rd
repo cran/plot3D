@@ -21,9 +21,9 @@
 This package is dedicated to Carlo.
 }
 \references{
-  \url{http://www.rforscience.com/rpackages/visualisation/oceanview/}
+  \url{https://www.rforscience.com/oceanview.html}
 
-  \url{http://www.rforscience.com/rpackages/visualisation/plot3d/}
+  \url{https://www.rforscience.com/plot3d.html}
 }
 \seealso{
 Functions that are based on the \link{persp} function:

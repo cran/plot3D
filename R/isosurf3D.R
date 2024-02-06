@@ -105,7 +105,7 @@ isosurf3D <- function(x, y, z, colvar, ...,
     plist <- plistcolkey(plist, colkey, col, zlim, clab, FALSE,
       type = "isosurf3D", breaks = NULL)
   }
-  plist <- plot.struct.3D(plist, poly = Poly, plot = plot)  
+  plist <- plot_struct_3D(plist, poly = Poly, plot = plot)  
   
   setplist(plist)   
   invisible(plist$mat)
@@ -232,7 +232,7 @@ triangle3D  <- function(tri, colvar = NULL,
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
       dot$clog, type = "triangle3D", breaks = breaks)
 
-  plist <- plot.struct.3D(plist, poly = Poly, plot = plot)  
+  plist <- plot_struct_3D(plist, poly = Poly, plot = plot)  
 
   setplist(plist)   
   invisible(plist$mat)

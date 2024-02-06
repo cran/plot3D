@@ -86,7 +86,7 @@ persp3Db <- function(x = seq(0, 1, length.out = nrow(col) +1),
     lty = lty, alpha = alpha, mapped = FALSE))
 
  # plot it
-  plist <- plot.struct.3D(plist, poly = Poly, plot = plot)  
+  plist <- plot_struct_3D(plist, poly = Poly, plot = plot)  
 
   setplist(plist)   
   invisible(plist$mat)

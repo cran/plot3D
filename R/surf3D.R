@@ -99,7 +99,7 @@ surf3D <- function(x, y, z, ...,
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
           dot$clog, type = "surf3D", breaks = breaks)
 
-  plist <- plot.struct.3D(plist, poly = Poly, plot = plot)  
+  plist <- plot_struct_3D(plist, poly = Poly, plot = plot)  
 
   setplist(plist)  
   invisible(plist$mat)

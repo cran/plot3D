@@ -132,7 +132,7 @@ border3D  <- function(x0, y0, z0, x1, y1, z1,
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
       dot$clog, type = "border3D", breaks = breaks)
 
-  plist <- plot.struct.3D(plist, segm = segm, plot = plot)
+  plist <- plot_struct_3D(plist, segm = segm, plot = plot)
 
   setplist(plist)   
   invisible(plist$mat)
@@ -280,7 +280,7 @@ rect3D  <- function(x0, y0, z0, x1 = NULL, y1 = NULL, z1 = NULL,
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
       dot$clog, type = "rect3D", breaks = breaks)
 
-  plist <- plot.struct.3D(plist, poly = poly, plot = plot)
+  plist <- plot_struct_3D(plist, poly = poly, plot = plot)
 
   setplist(plist)
   invisible(plist$mat)
@@ -421,7 +421,7 @@ box3D  <- function(x0, y0, z0, x1, y1, z1,
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
       dot$clog, type = "box3D", breaks = breaks)
 
-  plist <- plot.struct.3D(plist, poly = poly, plot = plot)
+  plist <- plot_struct_3D(plist, poly = poly, plot = plot)
 
   setplist(plist)
   invisible(plist$mat)

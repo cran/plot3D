@@ -107,7 +107,7 @@ text3D <- function(x, y, z, labels, ..., colvar = NULL,
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
          dot$clog, type = "label3D", breaks = breaks)
                  
-  plist <- plot.struct.3D (plist, labels = tlist, plot = plot)        
+  plist <- plot_struct_3D (plist, labels = tlist, plot = plot)        
 
   setplist(plist)   
   invisible(plist$mat)

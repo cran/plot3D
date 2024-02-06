@@ -40,7 +40,7 @@ alpha.col (col = "grey", alpha = 0.5)
     transparency channel (0 means transparent and 1 means opaque).
     Transparency defined in the color palette is overruled when 
     \code{lighting} or \code{shading} is switched on. 
-    To combine transparency with lighting or shading, pass argument {alpha} 
+    To combine transparency with lighting or shading, pass argument \code{alpha} 
     to the plotting functions directly.
     }
   \item{col }{Colors to interpolate, change.

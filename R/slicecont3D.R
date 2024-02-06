@@ -192,7 +192,7 @@ slicecont3D <- function(x, y, z, colvar, ...,
  # change projection depth such that lines are on top of images
   Seg$proj <- Seg$proj + dDepth*plist$persp$expand 
   
-  plist <- plot.struct.3D(plist, segm = Seg, plot = plot)  
+  plist <- plot_struct_3D(plist, segm = Seg, plot = plot)  
   
   setplist(plist)
   invisible(plist$mat)

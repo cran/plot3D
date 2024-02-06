@@ -1,5 +1,5 @@
 Package: plot3D
-Version: 1.4
+Version: 1.4.1
 Title: Plotting Multi-Dimensional Data
 Author: Karline Soetaert <karline.soetaert@nioz.nl>
 Maintainer: Karline Soetaert <karline.soetaert@nioz.nl>
@@ -9,6 +9,6 @@ Description: Functions for viewing 2-D and 3-D data, including perspective plots
 License: GPL (>= 3.0)
 LazyData: yes
 NeedsCompilation: no
-Packaged: 2021-05-20 06:28:24 UTC; karlines
+Packaged: 2024-02-06 12:08:36 UTC; karlines
 Repository: CRAN
-Date/Publication: 2021-05-22 15:10:08 UTC
+Date/Publication: 2024-02-06 13:20:02 UTC

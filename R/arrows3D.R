@@ -119,7 +119,7 @@ arrows3D  <- function(x0, y0, z0, x1 = x0, y1 = y0, z1 = z0,
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
       dot$clog, type = "arrows3D", breaks = breaks)
 
-  plist <- plot.struct.3D(plist, arr = arr, plot = plot)  
+  plist <- plot_struct_3D(plist, arr = arr, plot = plot)  
 
   setplist(plist)   
   invisible(plist$mat)

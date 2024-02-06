@@ -340,7 +340,7 @@ scatter3D <- function(x, y, z, ..., colvar = z,
       type = "scatter3D", breaks = breaks)
 
  # plot it
-  plist <- plot.struct.3D(plist, pt = pt, CIpt = CIpt, 
+  plist <- plot_struct_3D(plist, pt = pt, CIpt = CIpt, 
                poly = spoly, segm = sseg, plot = plot)  
   
   setplist(plist)

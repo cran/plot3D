@@ -128,7 +128,7 @@ spheresurf3D <- function(colvar = matrix(nrow = 50, ncol = 50, data = 1:50, byro
     plist <- plistcolkey(plist, colkey, col, clim, clab, 
          dot$clog, type = "spheresurf3D", breaks = breaks)
 
-  plist <- plot.struct.3D(plist, poly = Poly, segm = segm, plot = plot)  
+  plist <- plot_struct_3D(plist, poly = Poly, segm = segm, plot = plot)  
 
   setplist(plist)   
   invisible(plist$mat)

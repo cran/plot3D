@@ -90,8 +90,6 @@ data(Oxsat)
 }
 
 \references{
-  \url{https://www.nodc.noaa.gov}
-
   \url{https://www.nodc.noaa.gov/OC5/WOA05/woa05nc.html} 
    
   Originally made available by CSIRO:
